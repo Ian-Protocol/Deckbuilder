@@ -2,7 +2,7 @@
 // Connects to the database.
 require './includes/connect.php';
 
-$pageTitle = "Commander Deckbuilder - Deck Search";
+$page_title = "Commander Deckbuilder - Deck Search";
 
 // SQL is written as a String.
 // $query = "SELECT * FROM blog_posts ORDER BY date DESC LIMIT 5";
