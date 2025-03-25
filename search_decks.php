@@ -1,8 +1,8 @@
 <?php
 // Connects to the database.
-require('./includes/connect.php');
+require './includes/connect.php';
 
-$pageTitle = "Commander Deckbuilder";
+$pageTitle = "Commander Deckbuilder - Deck Search";
 
 // SQL is written as a String.
 // $query = "SELECT * FROM blog_posts ORDER BY date DESC LIMIT 5";
@@ -18,12 +18,8 @@ $pageTitle = "Commander Deckbuilder";
 <html lang="en">
     <?php include './includes/head.php'; ?>
     <body>
-        <h1>Commander Deckbuilder</h1>
+        <h1>Commander Deckbuilder - Deck Search</h1>
         <?php include './includes/navbar.php'; ?>
-
-        <div id="featured">
-            <h2>Featured Decks</h2>
-        </div>
     </body>
     <?php include './includes/footer.php'; ?>
 </html>
