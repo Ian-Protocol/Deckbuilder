@@ -116,7 +116,7 @@ function find_card($db, $card_name) {
 
     $statement -> execute();
 
-    if ($$statement) {
+    if ($statement) {
         return $statement['id'];
     } else {
         return fetch_card($db, $card_name);
@@ -167,10 +167,27 @@ function fetch_card($db, $card_name) {
 
         $card_id = $db -> lastInsertId();
 
+        // Insert color identity into cards_mana_types table.
+        insert_card_colors($db, $card_id, $card['colorIdentity']);
+
         return $card_id;
     }
     // TODO: Else: handle error here.
     // return null?
+}
+
+// Insert card colors into database.
+function insert_card_colors($db, $card_id, $color_identity) {
+    foreach ($color_identity as $color_code) {
+        // Acquire mana type ID from database.
+        $select_id_query = "SELECT id FROM mana_types WHERE mana_type = :color_code";
+
+        $statement = $db -> prepare($select_id_query);
+        $statement -> bindValue(':color_code', $color_code);
+        $statement -> execute();
+
+        $insert_query = "INSERT OR IGNORE INTO cards_mana_types (card_id, mana_type_id)"; 
+    }
 }
 
 if ($_POST) {
