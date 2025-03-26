@@ -185,8 +185,16 @@ function insert_card_colors($db, $card_id, $color_identity) {
         $statement = $db -> prepare($select_id_query);
         $statement -> bindValue(':color_code', $color_code);
         $statement -> execute();
+        $result = $statement -> fetch();
+        $mana_id = $result['mana_id'];
 
-        $insert_query = "INSERT OR IGNORE INTO cards_mana_types (card_id, mana_type_id)"; 
+        $insert_query = "INSERT OR IGNORE INTO cards_mana_types (card_id, mana_id)
+        VALUES (:card_id, :mana_id)";
+
+        $statement = $db -> prepare($insert_query);
+        $statement -> bindValue(':card_id', $card_id);
+        $statement -> bindValue(':mana_id', $mana_id);
+        $statement -> execute();
     }
 }
 
