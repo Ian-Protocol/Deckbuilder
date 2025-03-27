@@ -86,19 +86,18 @@ function parse_decklist($decklist_raw) {
 }
 
 // Saves the deck list in the decks table.
-function save_deck($db, $title, $description, $commander_id, $image_path, $archetype, $user_id) {
+function save_deck($db, $title, $description, $commander_id, $archetype, $user_id) {
         // Query & binding.
         //  Build the parameterized SQL query and bind to the sanitized values.
         // TODO: Create a dynamic version like in fetch_card.
-        $query = "INSERT INTO decks (user_id, title, description, image_path, archetype, card_id) 
-        VALUES (:user_id, :title, :description, :image_path, :archetype, :card_id)";
+        $query = "INSERT INTO decks (user_id, title, description, archetype, card_id) 
+        VALUES (:user_id, :title, :description, :archetype, :card_id)";
         $statement = $db -> prepare($query);
 
         //  Bind values to the parameters
         $statement -> bindValue(':user_id', $user_id);
         $statement -> bindValue(':title', $title);
         $statement -> bindValue(':description', $description);
-        $statement -> bindValue(':image_path', $image_path);
         $statement -> bindValue(':archetype', $archetype);
         $statement -> bindValue(':card_id', $commander_id);
 
@@ -183,8 +182,12 @@ function fetch_card($db, $card_name) {
         $statement -> execute();
         $card_id = $db -> lastInsertId();
 
+        // The API does not always return a color identity.
+        // Again, I need to use the back-up JSON,
+        // because this is VERY IMPORTANT DATA!
+        $color_identity = $card['colorIdentity'] ?? [];
         // Insert color identity into cards_mana_types table.
-        insert_card_colors($db, $card_id, $card['colorIdentity']);
+        insert_card_colors($db, $card_id, $color_identity);
 
         return $card_id;
     }
@@ -255,15 +258,22 @@ function file_is_valid($temporary_path, $new_path) {
     return $file_extension_is_valid && $mime_type_is_valid;
 }
 
-function upload_image() {
+function upload_image($db, $deck_id) {
     $image_filename        = $_FILES['image']['name'];
     $temporary_image_path  = $_FILES['image']['tmp_name'];
     $new_image_path        = file_upload_path($image_filename);
 
     if (file_is_valid($temporary_image_path, $new_image_path)) {
         move_uploaded_file($temporary_image_path, $new_image_path);
-        return $new_image_path;
     }
+
+    $query = "INSERT INTO images (deck_id, image_url) 
+    VALUES (:deck_id, :image_url)";
+
+    $statement = $db -> prepare($query);
+    $statement -> bindValue(':deck_id', $deck_id);
+    $statement -> bindValue(':image_url', $new_image_path);
+    $statement -> execute();
 }
 
 if ($_POST) {
@@ -271,7 +281,7 @@ if ($_POST) {
     $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    // Might have to do some funky stuff for the commander name as well.
+    // TODO: Same procedure as decklist processing below.
     $commander_name = filter_input(INPUT_POST, 'commander', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $archetype = filter_input(INPUT_POST, 'archetype', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
@@ -309,13 +319,6 @@ if ($_POST) {
         exit;
     }
 
-    if ($image_upload_detected && !$upload_error_detected) {
-        $image_path = upload_image();
-    } else {
-        header("Location: error.php");
-        exit;
-    }
-
     // Find commander id.
     $commander_id = find_card($db, $commander_name);
 
@@ -323,7 +326,12 @@ if ($_POST) {
     $decklist = parse_decklist($decklist_raw);
 
     // Save deck to decks table.
-    $deck_id = save_deck($db, $title, $description, $commander_id, $image_path, $archetype, $user_id);
+    $deck_id = save_deck($db, $title, $description, $commander_id, $archetype, $user_id);
+
+    // Upload image to uploads folder and images table.
+    if ($image_upload_detected && !$upload_error_detected) {
+        upload_image($db, $deck_id);
+    }
 
     // Save deck list to deck_cards table.
     save_deck_cards($db, $deck_id, $decklist);
