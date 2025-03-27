@@ -63,7 +63,7 @@ function parse_decklist($decklist_raw) {
     // which are output by some deckbuilders or MTG programs. Update if necessary.
     // May not match some "un" set names but those are illegal in EDH.
     // Don't currently check legality though, perhaps something to do in future.
-    $card_pattern = '/^(?<quantity>\d+)[xX]?\s+(?<name>[a-zA-Z0-9 \/,:-]*)/';
+    $card_pattern = '/^(?<quantity>\d+)[xX]?\s+(?<name>[a-zA-Z0-9 \/\'\.,:-]*)/';
 
     foreach ($lines as $line) {
         $line = trim($line);
@@ -138,28 +138,40 @@ function fetch_card($db, $card_name) {
 
     if ($json) {
         $card_data = json_decode($json, true);
+    } else {
+        // TODO: Else: handle error better here.
+        throw new Exception('Failed to fetch data from API.');
     }
-    // TODO: Else: handle error here.
 
     if (!empty($card_data['cards'])) {
-        // Acquire first result (sometimes duplicates exist).
-        $card = $card_data['cards'][0];
+        // The first match is bad and wrong!
+        // So filter the API response for an exact match.
+        // TODO: implement a back-up search from downloaded JSON from Scryfall.
+        $card = null;
 
+        foreach ($card_data['cards'] as $card_result) {
+            if (strcasecmp(trim($card_result['name']), $card_name) === 0) {
+                $card = $card_result;
+                break;
+            }
+        }
+
+        // Coalescing the nulls!
         $columns = [
-            'name' => $card['name'],
-            'type' => $card['type'],
+            'name' => $card['name'] ?? $card_name,
+            'type' => $card['type'] ?? '',
             'mana_cost' => $card['manaCost'] ?? 0,
-            'text' => $card['text'],
-            'power' => isset($card['power']) ? $card['power'] : null,
-            'toughness' => isset($card['toughness']) ? $card['toughness'] : null,
-            'image_url' => $card['imageUrl'],
-            'cmc' => $card['cmc']
+            'text' => $card['text'] ?? '',
+            'power' => $card['power'] ?? null,
+            'toughness' => $card['toughness'] ?? null,
+            'image_url' => $card['imageUrl'] ?? null,
+            'cmc' => $card['cmc'] ?? 0
         ];
 
         // Create query.
         // Separates each key by its delimiter.
         $query = "INSERT INTO cards (" . implode(", ", array_keys($columns)) . ") 
-            VALUES (" . implode(", :", array_keys($columns)) . ")";
+            VALUES (:" . implode(", :", array_keys($columns)) . ")";
 
         $statement = $db -> prepare($query);
 
@@ -258,9 +270,24 @@ if ($_POST) {
     //  Sanitize user input to escape HTML entities and filter out dangerous characters.
     $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+    // Might have to do some funky stuff for the commander name as well.
     $commander_name = filter_input(INPUT_POST, 'commander', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $archetype = filter_input(INPUT_POST, 'archetype', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $decklist_raw = filter_input(INPUT_POST, 'decklist', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+    // $decklist_raw = filter_input(INPUT_POST, 'decklist', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    // Is this safe enough? I need to retain proper string values in order to search API by card name.
+    // $decklist_raw = strip_tags(filter_input(INPUT_POST, 'decklist', FILTER_SANITIZE_SPECIAL_CHARS));
+    // $decklist_raw = htmlspecialchars_decode($decklist_raw, ENT_QUOTES);
+    // $decklist_raw = str_replace(["\r\n", "\r"], "\n", $decklist_raw);
+
+    // Retrieve the input while stripping HTML tags and retaining special characters
+    $decklist_raw = strip_tags(filter_input(INPUT_POST, 'decklist', FILTER_DEFAULT));
+    $decklist_raw = htmlspecialchars_decode($decklist_raw, ENT_QUOTES);
+    $decklist_raw = str_replace(["\r\n", "\r"], "\n", $decklist_raw);
+    $decklist_raw = preg_replace('/[^a-zA-Z0-9\s\-\'\/(",:]/u', '', $decklist_raw);
+    $decklist_raw = trim($decklist_raw);
+
 
     $image_upload_detected = isset($_FILES['image']) && ($_FILES['image']['error'] === 0);
     $upload_error_detected = isset($_FILES['image']) && ($_FILES['image']['error'] > 0);
