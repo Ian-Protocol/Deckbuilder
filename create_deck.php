@@ -223,6 +223,10 @@ function save_deck_cards($db, $deck_id, $decklist) {
         // Find the card ID. If it doesn't exist, exist it.
         $card_id = find_card($db, $card_name);
 
+        if (!$card_id) {
+            continue;
+        }
+
         $query = "INSERT INTO deck_cards (deck_id, card_id, quantity) 
         VALUES (:deck_id, :card_id, :quantity)";
 
@@ -281,22 +285,22 @@ if ($_POST) {
     $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    // TODO: Same procedure as decklist processing below.
-    $commander_name = filter_input(INPUT_POST, 'commander', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $archetype = filter_input(INPUT_POST, 'archetype', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     // $decklist_raw = filter_input(INPUT_POST, 'decklist', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     // Is this safe enough? I need to retain proper string values in order to search API by card name.
-    // $decklist_raw = strip_tags(filter_input(INPUT_POST, 'decklist', FILTER_SANITIZE_SPECIAL_CHARS));
-    // $decklist_raw = htmlspecialchars_decode($decklist_raw, ENT_QUOTES);
-    // $decklist_raw = str_replace(["\r\n", "\r"], "\n", $decklist_raw);
-
     // Retrieve the input while stripping HTML tags and retaining special characters
     $decklist_raw = strip_tags(filter_input(INPUT_POST, 'decklist', FILTER_DEFAULT));
     $decklist_raw = htmlspecialchars_decode($decklist_raw, ENT_QUOTES);
     $decklist_raw = str_replace(["\r\n", "\r"], "\n", $decklist_raw);
     $decklist_raw = preg_replace('/[^a-zA-Z0-9\s\-\'\/(",:]/u', '', $decklist_raw);
     $decklist_raw = trim($decklist_raw);
+
+    $commander_name = strip_tags(filter_input(INPUT_POST, 'commander', FILTER_DEFAULT));
+    $commander_name = htmlspecialchars_decode($commander_name, ENT_QUOTES);
+    $commander_name = str_replace(["\r\n", "\r"], "\n", $commander_name);
+    $commander_name = preg_replace('/[^a-zA-Z0-9\s\-\'\/(",:]/u', '', $commander_name);
+    $commander_name = trim($commander_name);
 
 
     $image_upload_detected = isset($_FILES['image']) && ($_FILES['image']['error'] === 0);
