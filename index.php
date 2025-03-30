@@ -4,7 +4,17 @@ require('./includes/connect.php');
 
 $page_title = "Commander Deckbuilder";
 
-$query = "SELECT title FROM decks ORDER BY updated_at DESC LIMIT 10";
+// TODO: Could fetch as I display them, what's better?
+$query = "SELECT d.deck_id, d.title, d.updated_at, d.archetype,
+            i.image_url,
+            c.name
+FROM decks d
+JOIN images i
+ON d.deck_id = i.deck_id
+JOIN cards c
+ON d.card_id = c.card_id
+ORDER BY updated_at DESC LIMIT 10";
+
 $statement = $db -> prepare($query);
 $statement -> execute(); 
 $decks = $statement -> fetchAll();
@@ -18,6 +28,25 @@ $decks = $statement -> fetchAll();
         <?php include './includes/navbar.php'; ?>
         <div id="featured">
             <h2>Featured Decks</h2>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Deck Name</th>
+                    <th>Commander</th>
+                    <th>Archetype</th>
+                    <th>Last Updated</th>
+                </tr>
+                <?php foreach ($decks as $deck): ?>
+                    <tr>
+                        <!-- Need a join to get images from image table. -->
+                        <td><img src="<?= $deck['image_url'] ?>" alt="" /></td>
+                        <td><a href="view_deck.php?id=<?= $deck['deck_id'] ?>"><?= $deck['title'] ?></a></td>
+                        <td><?= $deck['name'] ?></td>
+                        <td><?= $deck['archetype'] ?></td>
+                        <td><?= $deck['updated_at'] ?></td>
+                    </tr>
+                <?php endforeach ?>
+            </table>
         </div>
     </body>
     <?php include './includes/footer.php'; ?>
