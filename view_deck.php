@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 // Redirect user back to index if id is not an integer.
 if (isset($_GET['id']) && !is_numeric($_GET['id'])) {
     header("Location: index.php");
