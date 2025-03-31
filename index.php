@@ -6,7 +6,7 @@ $page_title = "Commander Deckbuilder";
 
 // TODO: Could fetch as I display them, what's better?
 $query = "SELECT d.deck_id, d.title, d.updated_at, d.archetype,
-            i.image_url,
+            i.thumbnail_path,
             c.name
 FROM decks d
 JOIN images i
@@ -38,8 +38,10 @@ $decks = $statement -> fetchAll();
                 </tr>
                 <?php foreach ($decks as $deck): ?>
                     <tr>
-                        <!-- Need a join to get images from image table. -->
-                        <td><img src="<?= $deck['image_url'] ?>" alt="" /></td>
+                        <td><?php if ($deck['thumbnail_path'] != ""): ?>
+                                <img src="<?= $deck['thumbnail_path'] ?>" alt="Deck Thumbnail" />
+                            <?php endif ?>
+                        </td>
                         <td><a href="view_deck.php?id=<?= $deck['deck_id'] ?>"><?= $deck['title'] ?></a></td>
                         <td><?= $deck['name'] ?></td>
                         <td><?= $deck['archetype'] ?></td>

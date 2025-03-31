@@ -13,7 +13,7 @@ $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
 
 // Build and prepare SQL String with :id placeholder parameter.
 $deck_query = "SELECT d.deck_id, d.title, d.description, d.updated_at, d.archetype,
-            i.image_url,
+            i.regular_path,
             c.name
             FROM decks d
             JOIN images i
@@ -60,7 +60,9 @@ $page_title = "Commander Deckbuilder - {$deck['title']}";
         <?php include './includes/navbar.php'; ?>
         <div id="deck-heading">
             <h2><?= $deck['name'] ?></h2>
-            <img src="<?= $deck['image_url'] ?>" alt="" />
+            <?php if ($deck['regular_path'] != ""): ?>
+                <img src="<?= $deck['regular_path'] ?>" alt="Deck Image" />
+            <?php endif ?>
             <h3>Description</h3>
             <?= $deck['description'] ?>
         </div>

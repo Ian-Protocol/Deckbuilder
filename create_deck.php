@@ -8,7 +8,7 @@ require './includes/connect.php';
 
 // Image resizing
 require 'C:\xampp\htdocs\_Assignments\php-image-resize-master\lib\ImageResize.php';
-// require 'C:\xampp\htdocs\_Assignments\php-image-resize-master\lib\ImageResizeException.php';
+require 'C:\xampp\htdocs\_Assignments\php-image-resize-master\lib\ImageResizeException.php';
 use \Gumlet\ImageResize;
 
 const REGULAR_WIDTH = 400;
@@ -274,35 +274,35 @@ function upload_image($db, $deck_id) {
     if (file_is_valid($temporary_image_path, $new_image_path)) {
         $image = new ImageResize($temporary_image_path);
 
-            $regular_filename = substr_replace($image_filename, "_regular",
-                strrpos($image_filename, ".")) . "." . pathinfo($image_filename, PATHINFO_EXTENSION);
-
-            $thumbnail_filename = substr_replace($image_filename, "_thumbnail",
+        $regular_filename = substr_replace($image_filename, "_regular",
             strrpos($image_filename, ".")) . "." . pathinfo($image_filename, PATHINFO_EXTENSION);
 
-            // Resize medium path
-            $regular_path = substr_replace($new_image_path, $regular_filename, 
-            strrpos($new_image_path, DIRECTORY_SEPARATOR) + 1);
-            
-            // Resize thumbnail path
-            $thumbnail_path = substr_replace($new_image_path, $thumbnail_filename, 
-            strrpos($new_image_path, DIRECTORY_SEPARATOR) + 1);
+        $thumbnail_filename = substr_replace($image_filename, "_thumbnail",
+            strrpos($image_filename, ".")) . "." . pathinfo($image_filename, PATHINFO_EXTENSION);
 
-            // Resize and save image.
-            $image
-                ->resizeToWidth(REGULAR_WIDTH)
-                ->save($regular_path)
+        // Resize medium path
+        $regular_path = substr_replace($new_image_path, $regular_filename, 
+        strrpos($new_image_path, DIRECTORY_SEPARATOR) + 1);
+        
+        // Resize thumbnail path
+        $thumbnail_path = substr_replace($new_image_path, $thumbnail_filename, 
+        strrpos($new_image_path, DIRECTORY_SEPARATOR) + 1);
 
-                ->resizeToWidth(THUMBAIL_WIDTH)
-                ->save($thumbnail_path)
-            ;
+        // Resize and save image.
+        $image
+            ->resizeToWidth(REGULAR_WIDTH)
+            ->save($regular_path)
+
+            ->resizeToWidth(THUMBAIL_WIDTH)
+            ->save($thumbnail_path)
+        ;
     }
 
     $query = "INSERT INTO images (deck_id, regular_path, thumbnail_path) 
-    VALUES (:deck_id, :regular_path, :thubmnail_path)";
+    VALUES (:deck_id, :regular_path, :thumbnail_path)";
 
-    $regular_filename = "." . DIRECTORY_SEPARATOR . UPLOAD_SUBFOLDER_NAME . $regular_filename;
-    $thumbnail_filename = "." . DIRECTORY_SEPARATOR . UPLOAD_SUBFOLDER_NAME . $thumbnail_filename;
+    $regular_filename = "." . DIRECTORY_SEPARATOR . UPLOAD_SUBFOLDER_NAME . DIRECTORY_SEPARATOR . $regular_filename;
+    $thumbnail_filename = "." . DIRECTORY_SEPARATOR . UPLOAD_SUBFOLDER_NAME . DIRECTORY_SEPARATOR . $thumbnail_filename;
 
     $statement = $db -> prepare($query);
     $statement -> bindValue(':deck_id', $deck_id);
