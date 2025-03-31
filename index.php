@@ -38,7 +38,8 @@ $decks = $statement -> fetchAll();
                 </tr>
                 <?php foreach ($decks as $deck): ?>
                     <tr>
-                        <td><?php if ($deck['thumbnail_path'] != ""): ?>
+                        <td>
+                            <?php if ($deck['thumbnail_path'] != ""): ?>
                                 <img src="<?= $deck['thumbnail_path'] ?>" alt="Deck Thumbnail" />
                             <?php endif ?>
                         </td>

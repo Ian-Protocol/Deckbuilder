@@ -52,16 +52,6 @@ $statement -> execute();
 $cards = $statement -> fetchAll();
 
 $page_title = "Commander Deckbuilder - {$deck['title']}";
-
-$deck_owner_id = $deck['user_id'];
-$can_edit = false;
-
-// Only show "Edit Deck" button if user is admin or deck owner.
-if (isset($_SESSION['role'])) {
-    if ($_SESSION['role'] === 'admin' || $_SESSION['user_id'] == $deck_owner_id) {
-        $can_edit = true;
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -77,7 +67,7 @@ if (isset($_SESSION['role'])) {
             <?php endif ?>
             <h3>Description</h3>
             <?= $deck['description'] ?>
-            <?php if ($edit_deck): ?>
+            <?php if ($can_edit): ?>
                 <button type="button">Edit Deck</button>
             <?php endif ?>
         </div>
