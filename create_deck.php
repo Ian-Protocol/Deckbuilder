@@ -4,6 +4,8 @@ session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
+} else {
+    $user_id = $_SESSION['user_id'];
 }
 
 // Connects to the database.
@@ -23,7 +25,6 @@ $page_title = "Commander Deckbuilder - Create Deck";
 // TODO: Figure out users.
 // Perhaps with sessions! $user_id = $_SESSION['user_id'];
 // Admin is id 1.
-$user_id = 1;
 
 // Define archetypes.
 // Considerations:
