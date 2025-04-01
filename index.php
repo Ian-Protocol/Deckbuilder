@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Connects to the database.
 require('./includes/connect.php');
 

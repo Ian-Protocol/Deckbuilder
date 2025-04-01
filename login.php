@@ -1,4 +1,5 @@
 <?php
+session_start();
 require 'includes/connect.php';
 
 $page_title = "Commander Deckbuilder - Log In";
@@ -52,18 +53,18 @@ if ($_POST) {
                 <input type="submit" value="Log In">
             </form>
         </div>
-            <div id="message">
-                <?php if ($login_successful): ?>
-                    <?php foreach ($messages as $message): ?>
-                        <p><?= $message ?></p>
-                    <?php endforeach ?>
-                    <a href="index.php">Go to homepage</a>
-                <?php else: ?>
-                    <?php foreach ($messages as $message): ?>
-                        <p><?= $message ?></p>
-                    <?php endforeach ?>
-                <?php endif ?>
-            </div>
+        <div id="message">
+            <?php if ($login_successful): ?>
+                <?php foreach ($messages as $message): ?>
+                    <p><?= $message ?></p>
+                <?php endforeach ?>
+                <a href="index.php">Go to homepage</a>
+            <?php else: ?>
+                <?php foreach ($messages as $message): ?>
+                    <p><?= $message ?></p>
+                <?php endforeach ?>
+            <?php endif ?>
+        </div>
     </body>
     <?php include './includes/footer.php'; ?>
 </html>

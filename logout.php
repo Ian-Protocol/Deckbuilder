@@ -1,5 +1,6 @@
 <?php
-require 'includes/connect.php';
+session_start();
+$_SESSION = [];
 
 $page_title = "Commander Deckbuilder - Log Out";
 ?>
@@ -13,6 +14,7 @@ $page_title = "Commander Deckbuilder - Log Out";
 
         <div id="register">
             <h2>Farewell 4{W}{W}</h2>
+            You are logged out. <a href="index.php">Return to home page</a>
         </div>
     </body>
     <?php include './includes/footer.php'; ?>

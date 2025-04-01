@@ -1,7 +1,10 @@
 <?php
-// TODO: Create better authentication.
-// Authenticates user
-require './includes/authenticate.php';
+session_start();
+// If the user is not logged in, they cannot view this page.
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
 
 // Connects to the database.
 require './includes/connect.php';

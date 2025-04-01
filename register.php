@@ -1,4 +1,5 @@
 <?php
+session_start();
 require 'includes/connect.php';
 
 $page_title = "Commander Deckbuilder - Register";

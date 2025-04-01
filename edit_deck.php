@@ -1,4 +1,10 @@
 <?php
+session_start();
+// If the user is not logged in, they cannot view this page.
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
 
 // Redirect user back to index if id is not an integer.
 if (isset($_GET['id']) && !is_numeric($_GET['id'])) {
