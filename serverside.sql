@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 31, 2025 at 05:49 AM
+-- Generation Time: Apr 01, 2025 at 03:36 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -2695,7 +2695,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `role`, `created_at`) VALUES
-(1, 'admin', 'password', '', 'admin', '2025-03-27 03:17:00');
+(1, 'admin', 'password', '', 'admin', '2025-03-27 03:17:00'),
+(2, 'magic_player', '$2y$10$48gOWZhpUiuqkxxEAaqj0uoPZ2eELyaHLvJAVOx5I7jPD7Yh3PjrK', 'magic@magic.com', 'registered', '2025-03-31 22:10:27');
 
 --
 -- Indexes for dumped tables
@@ -2795,7 +2796,7 @@ ALTER TABLE `mana_types`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
