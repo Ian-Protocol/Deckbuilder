@@ -1,16 +1,19 @@
 <?php
 session_start();
-// If the user is not logged in, they cannot view this page.
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
-
 // Redirect user back to index if id is not an integer.
 if (isset($_GET['id']) && !is_numeric($_GET['id'])) {
     header("Location: index.php");
     exit;
 }
+
+// If the user is not logged in, they can still view this page.
+if (!isset($_SESSION['user_id'])) {
+    // Something
+} else {
+    $user_id = $_SESSION['user_id'];
+    $username = $_SESSION['username'];
+}
+
 
 // Connects to the database.
 require('./includes/connect.php');
@@ -21,12 +24,15 @@ $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
 // Build and prepare SQL String with :id placeholder parameter.
 $deck_query = "SELECT d.deck_id, d.user_id, d.title, d.description, d.created_at, d.updated_at, d.archetype,
             i.regular_path,
-            c.name
+            c.name,
+            u.username
             FROM decks d
-            JOIN images i
+            LEFT OUTER JOIN images i
             ON d.deck_id = i.deck_id
             JOIN cards c
             ON d.card_id = c.card_id
+            JOIN users u
+            ON u.user_id = d.user_id
             WHERE d.deck_id = :id LIMIT 1";
 
 $cards_query = "SELECT d.deck_id,
@@ -57,13 +63,24 @@ $statement -> execute();
 $cards = $statement -> fetchAll();
 
 $page_title = "Commander Deckbuilder - {$deck['title']}";
+
+$deck_owner_id = $deck['user_id'];
+$deck_owner_username = $deck['username'];
+
+// Only show "Edit Deck" button if user is admin or deck owner.
+if (isset($_SESSION['role'])) {
+    if (($_SESSION['role'] !== 'admin') || ($_SESSION['user_id'] !== $deck_owner_id)) {
+        header("Location: view_deck.php?id={$id}");
+        exit;
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
     <?php include './includes/head.php'; ?>
     <body>
-        <h1>Commander Deckbuilder - <?= $deck['title'] ?></h1>
+        <h1>Commander Deckbuilder - <?= $deck['title'] . " - by " . $deck_owner_username ?></h1>
         <?php include './includes/navbar.php'; ?>
         <div id="deck-heading">
             <h2><?= $deck['name'] ?></h2>
@@ -73,7 +90,7 @@ $page_title = "Commander Deckbuilder - {$deck['title']}";
             <h3>Description</h3>
             <?= $deck['description'] ?>
             <?php if ($can_edit): ?>
-                <button type="button">Edit Deck</button>
+                <a href="edit_deck.php?id=<?= $deck['deck_id'] ?>">Edit Deck</a>
             <?php endif ?>
         </div>
         <div id="deck">

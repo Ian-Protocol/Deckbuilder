@@ -27,7 +27,7 @@ $deck_query = "SELECT d.deck_id, d.user_id, d.title, d.description, d.created_at
             c.name,
             u.username
             FROM decks d
-            JOIN images i
+            LEFT OUTER JOIN images i
             ON d.deck_id = i.deck_id
             JOIN cards c
             ON d.card_id = c.card_id
@@ -90,7 +90,7 @@ if (isset($_SESSION['role'])) {
             <h3>Description</h3>
             <?= $deck['description'] ?>
             <?php if ($can_edit): ?>
-                <button type="button">Edit Deck</button>
+                <a href="edit_deck.php?id=<?= $deck['deck_id'] ?>">Edit Deck</a>
             <?php endif ?>
         </div>
         <div id="deck">
