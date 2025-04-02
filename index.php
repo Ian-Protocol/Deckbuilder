@@ -7,13 +7,13 @@ $page_title = "Commander Deckbuilder";
 
 // TODO: Could fetch as I display them, what's better?
 $query = "SELECT d.deck_id, d.title, d.updated_at, d.archetype,
-            i.thumbnail_path,
-            c.name
+            c.name,
+            i.thumbnail_path
 FROM decks d
-JOIN images i
-ON d.deck_id = i.deck_id
 JOIN cards c
 ON d.card_id = c.card_id
+LEFT OUTER JOIN images i
+ON d.deck_id = i.deck_id
 ORDER BY updated_at DESC LIMIT 10";
 
 $statement = $db -> prepare($query);
@@ -40,7 +40,7 @@ $decks = $statement -> fetchAll();
                 <?php foreach ($decks as $deck): ?>
                     <tr>
                         <td>
-                            <?php if ($deck['thumbnail_path'] != ""): ?>
+                            <?php if ($deck['thumbnail_path']): ?>
                                 <img src="<?= $deck['thumbnail_path'] ?>" alt="Deck Thumbnail" />
                             <?php endif ?>
                         </td>
