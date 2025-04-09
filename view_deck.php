@@ -6,6 +6,9 @@ if (isset($_GET['id']) && !is_numeric($_GET['id'])) {
     exit;
 }
 
+// Sanitize $_GET['id'] to ensure it's a number.
+$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
+
 // If the user is not logged in, they can still view this page.
 if (!isset($_SESSION['user_id'])) {
     // Something
@@ -14,12 +17,8 @@ if (!isset($_SESSION['user_id'])) {
     $username = $_SESSION['username'];
 }
 
-
 // Connects to the database.
 require('./includes/connect.php');
-
-// Sanitize $_GET['id'] to ensure it's a number.
-$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
 
 // Build and prepare SQL String with :id placeholder parameter.
 $deck_query = "SELECT d.deck_id, d.user_id, d.title, d.description, d.created_at, d.updated_at, d.archetype,
@@ -70,7 +69,7 @@ $can_edit = false;
 
 // Only show "Edit Deck" button if user is admin or deck owner.
 if (isset($_SESSION['role'])) {
-    if ($_SESSION['role'] === 'admin' || $_SESSION['user_id'] == $deck_owner_id) {
+    if ($_SESSION['role'] == 'admin' || $_SESSION['user_id'] == $deck_owner_id) {
         $can_edit = true;
     }
 }
@@ -84,23 +83,30 @@ if (isset($_SESSION['role'])) {
         <?php include './includes/navbar.php'; ?>
         <div id="deck-heading">
             <h2><?= $deck['name'] ?></h2>
+            <?php if ($can_edit): ?>
+                <a href="edit_deck.php?id=<?= $deck['deck_id'] ?>">Edit Deck</a>
+            <?php endif ?>
             <?php if ($deck['regular_path'] != ""): ?>
                 <img src="<?= $deck['regular_path'] ?>" alt="Deck Image" />
             <?php endif ?>
             <h3>Description</h3>
             <?= $deck['description'] ?>
-            <?php if ($can_edit): ?>
-                <a href="edit_deck.php?id=<?= $deck['deck_id'] ?>">Edit Deck</a>
-            <?php endif ?>
         </div>
         <div id="deck">
-            <ul>
+            <table>
+                <tr>
+                    <th>Qty</th>
+                    <th>Card Name</th>
+                    <th>Mana Cost</th>
+                </tr>
                 <?php foreach ($cards as $card): ?>
-                    <li>
-                        <?= $card['card_name'] . " " . $card['quantity'] ?>
-                    </li>
+                    <tr>
+                        <td><?= $card['quantity'] ?></td>
+                        <td><?= $card['card_name'] ?></td>
+                        <td><?= $card['mana_cost'] ?></td>
+                    </tr>
                 <?php endforeach ?>
-            </ul>
+            </table>
         </div>
     </body>
     <?php include './includes/footer.php'; ?>

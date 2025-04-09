@@ -6,9 +6,13 @@ if (isset($_GET['id']) && !is_numeric($_GET['id'])) {
     exit;
 }
 
-// If the user is not logged in, they can still view this page.
+// Sanitize $_GET['id'] to ensure it's a number.
+$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
+
+// If the user is not logged in, they can still view the deck.
 if (!isset($_SESSION['user_id'])) {
-    // Something
+    header("Location: view_deck.php?id={$id}");
+    exit;
 } else {
     $user_id = $_SESSION['user_id'];
     $username = $_SESSION['username'];
@@ -17,9 +21,6 @@ if (!isset($_SESSION['user_id'])) {
 
 // Connects to the database.
 require('./includes/connect.php');
-
-// Sanitize $_GET['id'] to ensure it's a number.
-$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
 
 // Build and prepare SQL String with :id placeholder parameter.
 $deck_query = "SELECT d.deck_id, d.user_id, d.title, d.description, d.created_at, d.updated_at, d.archetype,
@@ -66,13 +67,29 @@ $page_title = "Commander Deckbuilder - {$deck['title']}";
 
 $deck_owner_id = $deck['user_id'];
 $deck_owner_username = $deck['username'];
+$can_edit = false;
 
 // Only show "Edit Deck" button if user is admin or deck owner.
 if (isset($_SESSION['role'])) {
-    if (($_SESSION['role'] !== 'admin') || ($_SESSION['user_id'] !== $deck_owner_id)) {
-        header("Location: view_deck.php?id={$id}");
-        exit;
+    if ($_SESSION['role'] == 'admin' || $_SESSION['user_id'] == $deck_owner_id) {
+        $can_edit = true;
     }
+}
+
+// Update or delete deck.
+if (isset($_POST['update'])) {
+        print_r($_POST);
+        if ($_POST['delete-image'] === "on") {
+
+        }
+} elseif (isset($_POST['delete'])) {
+    $query = "DELETE FROM decks WHERE deck_id = :id";
+    $statement = $db -> prepare($query);
+    $statement -> bindValue(':id', $id, PDO::PARAM_INT);
+    $statement -> execute();
+
+    header("Location: index.php");
+    exit;
 }
 ?>
 
@@ -82,26 +99,39 @@ if (isset($_SESSION['role'])) {
     <body>
         <h1>Commander Deckbuilder - <?= $deck['title'] . " - by " . $deck_owner_username ?></h1>
         <?php include './includes/navbar.php'; ?>
-        <div id="deck-heading">
-            <h2><?= $deck['name'] ?></h2>
-            <?php if ($deck['regular_path'] != ""): ?>
-                <img src="<?= $deck['regular_path'] ?>" alt="Deck Image" />
-            <?php endif ?>
-            <h3>Description</h3>
-            <?= $deck['description'] ?>
-            <?php if ($can_edit): ?>
-                <a href="edit_deck.php?id=<?= $deck['deck_id'] ?>">Edit Deck</a>
-            <?php endif ?>
-        </div>
-        <div id="deck">
-            <ul>
-                <?php foreach ($cards as $card): ?>
-                    <li>
-                        <?= $card['card_name'] . " " . $card['quantity'] ?>
-                    </li>
-                <?php endforeach ?>
-            </ul>
-        </div>
+        <form action="edit_deck.php?id=<?= $id ?>" method="post" enctype="multipart/form-data">
+            <div id="deck-heading">
+                <h2><?= $deck['name'] ?></h2>
+                <?php if ($deck['regular_path'] != ""): ?>
+                    <img src="<?= $deck['regular_path'] ?>" alt="Deck Image" />
+
+                    <label for="delete-image">Delete Image</label>
+                    <input name="delete-image" id="delete-image" type="checkbox">
+                    <label for="update-image">Update Image</label>
+                    <input name="update-image" id="update-image" type="checkbox">
+                <?php endif ?>
+                <h3>Description</h3>
+                <?= $deck['description'] ?>
+            </div>
+            <div id="deck">
+                <table>
+                    <tr>
+                        <th>Qty</th>
+                        <th>Card Name</th>
+                        <th>Mana Cost</th>
+                    </tr>
+                    <?php foreach ($cards as $card): ?>
+                        <tr>
+                            <td><input type="number" min="0" value="<?= $card['quantity'] ?>"></td>
+                            <td><?= $card['card_name'] ?></td>
+                            <td><?= $card['mana_cost'] ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                </table>
+            </div>
+            <input type="submit" name="update" value="Update Deck">
+            <input type="submit" name="delete" value="Delete Deck">
+        </form>
     </body>
     <?php include './includes/footer.php'; ?>
 </html>
