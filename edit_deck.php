@@ -18,13 +18,15 @@ if (!isset($_SESSION['user_id'])) {
     $username = $_SESSION['username'];
 }
 
-
 // Connects to the database.
-require('./includes/connect.php');
+require './includes/connect.php';
+
+// Image resizing and uploading.
+require './includes/images.php';
 
 // Build and prepare SQL String with :id placeholder parameter.
 $deck_query = "SELECT d.deck_id, d.user_id, d.title, d.description, d.created_at, d.updated_at, d.archetype,
-            i.regular_path,
+            i.image_id, i.regular_path, i.thumbnail_path,
             c.name,
             u.username
             FROM decks d
@@ -78,10 +80,25 @@ if (isset($_SESSION['role'])) {
 
 // Update or delete deck.
 if (isset($_POST['update'])) {
-        print_r($_POST);
-        if ($_POST['delete-image'] === "on") {
+    $image_upload_detected = isset($_FILES['image']) && ($_FILES['image']['error'] === 0);
+    $upload_error_detected = isset($_FILES['image']) && ($_FILES['image']['error'] > 0);
+    $image_delete_detected = isset($_POST['delete-image']) && $_POST['delete-image'] === "on";
 
-        }
+    if ($image_delete_detected) {
+        // Remove image from database.
+        $query = "DELETE FROM images WHERE image_id = :image_id";
+        $statement = $db -> prepare($query);
+        $statement -> bindValue(':image_id', $deck['image_id']);
+        $statement -> execute();
+
+        // Remove image from filesystem.
+        unlink($deck['regular_path']);
+        unlink($deck['thumbnail_path']);
+    } elseif ($image_upload_detected && !$upload_error_detected) {
+        upload_image($db, $deck['deck_id']);
+    }
+    header("Location: edit_deck.php?id={$id}");
+    exit;
 } elseif (isset($_POST['delete'])) {
     $query = "DELETE FROM decks WHERE deck_id = :id";
     $statement = $db -> prepare($query);
@@ -107,9 +124,11 @@ if (isset($_POST['update'])) {
 
                     <label for="delete-image">Delete Image</label>
                     <input name="delete-image" id="delete-image" type="checkbox">
-                    <label for="update-image">Update Image</label>
-                    <input name="update-image" id="update-image" type="checkbox">
+                    <label for="image">Update Image</label>
+                <?php else: ?>
+                    <label for="image">Add Image</label>
                 <?php endif ?>
+                <input type="file" name="image" id="image">
                 <h3>Description</h3>
                 <?= $deck['description'] ?>
             </div>

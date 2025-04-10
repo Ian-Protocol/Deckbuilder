@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 // Connects to the database.
 require './includes/connect.php';
 
-// Image resizing
+// Image resizing and uploading.
 require './includes/images.php';
 
 $page_title = "Commander Deckbuilder - Create Deck";

@@ -64,13 +64,13 @@ function upload_image($db, $deck_id) {
         ;
     }
 
-    $query = "INSERT INTO images (deck_id, regular_path, thumbnail_path) 
+    $image_query = "INSERT INTO images (deck_id, regular_path, thumbnail_path) 
     VALUES (:deck_id, :regular_path, :thumbnail_path)";
 
     $regular_filename = "." . DIRECTORY_SEPARATOR . UPLOAD_SUBFOLDER_NAME . DIRECTORY_SEPARATOR . $regular_filename;
     $thumbnail_filename = "." . DIRECTORY_SEPARATOR . UPLOAD_SUBFOLDER_NAME . DIRECTORY_SEPARATOR . $thumbnail_filename;
 
-    $statement = $db -> prepare($query);
+    $statement = $db -> prepare($image_query);
     $statement -> bindValue(':deck_id', $deck_id);
     $statement -> bindValue(':regular_path', $regular_filename);
     $statement -> bindValue(':thumbnail_path', $thumbnail_filename);
