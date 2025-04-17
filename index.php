@@ -28,7 +28,7 @@ $decks = $statement -> fetchAll();
         <h1>Commander Deckbuilder</h1>
         <?php include './includes/navbar.php'; ?>
         <div id="featured">
-            <h2>Featured Decks</h2>
+            <h2>Recent Decks</h2>
             <table>
                 <tr>
                     <th></th>

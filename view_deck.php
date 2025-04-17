@@ -7,7 +7,8 @@ if (isset($_GET['id']) && !is_numeric($_GET['id'])) {
 }
 
 // Sanitize $_GET['id'] to ensure it's a number.
-$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
+$deck_id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
+$can_comment = false;
 
 // If the user is not logged in, they can still view this page.
 if (!isset($_SESSION['user_id'])) {
@@ -15,6 +16,7 @@ if (!isset($_SESSION['user_id'])) {
 } else {
     $user_id = $_SESSION['user_id'];
     $username = $_SESSION['username'];
+    $can_comment = true;
 }
 
 // Connects to the database.
@@ -45,9 +47,20 @@ $cards_query = "SELECT d.deck_id,
                 ON dc.card_id = c.card_id
                 WHERE d.deck_id = :id";
 
+$comments_query = "SELECT d.deck_id,
+                c.user_id, c.content, c.created_at,
+                u.user_id, u.username
+                FROM decks d
+                JOIN comments c
+                ON d.deck_id = c.deck_id
+                JOIN users u
+                ON u.user_id = c.user_id
+                WHERE d.deck_id = :id
+                ORDER BY c.created_at DESC";
+
 // A PDO::Statement is prepared from the query.
 $statement = $db -> prepare($deck_query);
-$statement -> bindValue('id', $id, PDO::PARAM_INT);
+$statement -> bindValue('id', $deck_id, PDO::PARAM_INT);
 $statement -> execute();
 
 // Fetch the row selected by primary key id.
@@ -55,11 +68,19 @@ $deck = $statement -> fetch();
 
 // A PDO::Statement is prepared from the query.
 $statement = $db -> prepare($cards_query);
-$statement -> bindValue('id', $id, PDO::PARAM_INT);
+$statement -> bindValue('id', $deck_id, PDO::PARAM_INT);
 $statement -> execute();
 
 // Fetch the row selected by primary key id.
 $cards = $statement -> fetchAll();
+
+// A PDO::Statement is prepared from the query.
+$statement = $db -> prepare($comments_query);
+$statement -> bindValue('id', $deck_id, PDO::PARAM_INT);
+$statement -> execute();
+
+// Fetch the row selected by primary key id.
+$comments = $statement -> fetchAll();
 
 $page_title = "Commander Deckbuilder - {$deck['title']}";
 
@@ -71,6 +92,22 @@ $can_edit = false;
 if (isset($_SESSION['role'])) {
     if ($_SESSION['role'] == 'admin' || $_SESSION['user_id'] == $deck_owner_id) {
         $can_edit = true;
+    }
+}
+
+if ($_POST) {
+    //  Sanitize user input to escape HTML entities and filter out dangerous characters.
+    $content = filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+    if (strlen($content) > 0) {
+        $query = "INSERT INTO comments (deck_id, user_id, content) 
+            VALUES (:deck_id, :user_id, :content)";
+
+        $statement = $db -> prepare($query);
+        $statement -> bindValue(':deck_id', $deck_id);
+        $statement -> bindValue(':user_id', $user_id);
+        $statement -> bindValue(':content', $content);
+        $statement -> execute();
     }
 }
 ?>
@@ -108,6 +145,29 @@ if (isset($_SESSION['role'])) {
                 <?php endforeach ?>
             </table>
         </div>
+        <?php if ($comments): ?>
+            <section id="comments">
+                <h3>Comments</h3>
+                <?php foreach ($comments as $comment): ?>
+                    <div class="comment">
+                        <div class="comment-header">
+                            <?= $comment['username'] ?>
+                            <?= $comment['created_at'] ?>
+                        </div>
+                        <?= $comment['content'] ?>
+                    </div>
+                <?php endforeach ?>
+            </section>
+        <?php endif ?>
+        <?php if ($can_comment): ?>
+            <form action="view_deck.php?id=<?= $deck_id ?>" method="post">
+                <fieldset>
+                    <label for="comment"><h3>Leave a Comment</h3></label>
+                    <textarea name="comment" id="comment"></textarea>
+                    <input type="submit" value="Submit">
+                </fieldset>
+            </form>
+        <?php endif ?>
     </body>
     <?php include './includes/footer.php'; ?>
 </html>
