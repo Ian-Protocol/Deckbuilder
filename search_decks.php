@@ -25,6 +25,12 @@ ORDER BY d.updated_at DESC";
 $statement = $db -> prepare($query);
 $statement -> execute(); 
 $decks = $statement -> fetchAll();
+
+// Fetch archetypes
+$query = "SELECT * FROM archetypes ORDER BY archetype";
+$statement = $db->prepare($query);
+$statement->execute();
+$archetypes = $statement->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -33,6 +39,16 @@ $decks = $statement -> fetchAll();
     <body>
         <h1>Commander Deckbuilder - View and Search Decks</h1>
         <?php include './includes/navbar.php'; ?>
+        <h2>Browse by Archetype</h2>
+        <ul>
+            <?php foreach ($archetypes as $arch): ?>
+                <li>
+                    <a href="archetype.php?id=<?= $arch['archetype_id'] ?>">
+                        <?= htmlspecialchars(ucwords($arch['archetype'])) ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
         <div id="featured">
             <h2>All Decks</h2>
             <table>
