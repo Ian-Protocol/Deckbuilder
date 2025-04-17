@@ -40,7 +40,7 @@ $deck_query = "SELECT d.deck_id, d.user_id, d.title, d.description, d.created_at
 
 $cards_query = "SELECT d.deck_id,
                 c.name AS card_name,
-                c.type, c.mana_cost,
+                c.type, c.mana_cost, c.card_id,
                 dc.quantity
                 FROM decks d
                 JOIN deck_cards dc
@@ -86,6 +86,7 @@ if (isset($_POST['update'])) {
 
     if ($image_delete_detected) {
         // Remove image from database.
+        //TODO: Create a function for these to implement better code reuse.
         $query = "DELETE FROM images WHERE image_id = :image_id";
         $statement = $db -> prepare($query);
         $statement -> bindValue(':image_id', $deck['image_id']);
@@ -95,7 +96,18 @@ if (isset($_POST['update'])) {
         unlink($deck['regular_path']);
         unlink($deck['thumbnail_path']);
     } elseif ($image_upload_detected && !$upload_error_detected) {
-        upload_image($db, $deck['deck_id']);
+        // Clear previous image.
+        $query = "DELETE FROM images WHERE image_id = :image_id";
+        $statement = $db -> prepare($query);
+        $statement -> bindValue(':image_id', $deck['image_id']);
+        $statement -> execute();
+
+        // Remove previous image from filesystem.
+        unlink($deck['regular_path']);
+        unlink($deck['thumbnail_path']);
+
+        // Upload new image.
+        upload_image($db, $id);
     }
     header("Location: edit_deck.php?id={$id}");
     exit;
@@ -141,7 +153,7 @@ if (isset($_POST['update'])) {
                     </tr>
                     <?php foreach ($cards as $card): ?>
                         <tr>
-                            <td><input type="number" min="0" value="<?= $card['quantity'] ?>"></td>
+                            <td><input type="number" name="card_quantities[<?= $card['card_id'] ?>]" id="card_quantity_<?= $card['card_id'] ?>" min="0" value="<?= $card['quantity'] ?>"></td>
                             <td><?= $card['card_name'] ?></td>
                             <td><?= $card['mana_cost'] ?></td>
                         </tr>
