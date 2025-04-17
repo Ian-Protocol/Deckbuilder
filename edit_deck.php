@@ -84,6 +84,31 @@ if (isset($_POST['update'])) {
     $upload_error_detected = isset($_FILES['image']) && ($_FILES['image']['error'] > 0);
     $image_delete_detected = isset($_POST['delete-image']) && $_POST['delete-image'] === "on";
 
+    // Update quantities where applicable.
+    $card_quantities = $_POST['card_quantities'];
+    foreach ($cards as $card) {
+        $quantity = $card_quantities[$card['card_id']] ?? $card['quantity'];
+
+        if ($quantity != $card['quantity']) {
+            if ($quantity > 0) {
+                $query = "UPDATE deck_cards SET quantity = :quantity
+                        WHERE deck_id = :deck_id AND card_id = :card_id";
+                $statement = $db -> prepare($query);
+                $statement -> bindValue(':quantity', $quantity);
+                $statement -> bindValue(':deck_id', $id);
+                $statement -> bindValue(':card_id', $card['card_id']);
+                $statement -> execute();
+            } else {
+                $query = "DELETE FROM deck_cards
+                        WHERE deck_id = :deck_id AND card_id = :card_id";
+                $statement = $db -> prepare($query);
+                $statement -> bindValue(':deck_id', $id);
+                $statement -> bindValue(':card_id', $card['card_id']);
+                $statement -> execute();
+            }
+        }
+    }
+
     if ($image_delete_detected) {
         // Remove image from database.
         //TODO: Create a function for these to implement better code reuse.
