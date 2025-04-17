@@ -23,7 +23,7 @@ if (!isset($_SESSION['user_id'])) {
 require('./includes/connect.php');
 
 // Build and prepare SQL String with :id placeholder parameter.
-$deck_query = "SELECT d.deck_id, d.user_id, d.title, d.description, d.created_at, d.updated_at, d.archetype,
+$deck_query = "SELECT d.deck_id, d.user_id, d.title, d.description, d.created_at, d.updated_at, d.archetype_id,
             i.regular_path,
             c.name,
             u.username
