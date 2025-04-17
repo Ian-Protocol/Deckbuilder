@@ -1,25 +1,65 @@
 <?php
+session_start();
 // Connects to the database.
-require './includes/connect.php';
+require('./includes/connect.php');
 
-$page_title = "Commander Deckbuilder - Deck Search";
+$page_title = "Commander Deckbuilder - View and Search Decks";
 
-// SQL is written as a String.
-// $query = "SELECT * FROM blog_posts ORDER BY date DESC LIMIT 5";
+// TODO: Could fetch as I display them, what's better?
+$query = "SELECT d.deck_id, d.title, d.updated_at, d.archetype_id, d.user_id,
+            c.name,
+            a.archetype_id, a.archetype,
+            u.user_id, u.username,
+            i.thumbnail_path
+FROM decks d
+JOIN cards c
+ON d.card_id = c.card_id
+JOIN archetypes a
+ON a.archetype_id = d.archetype_id
+JOIN users u
+ON u.user_id = d.user_id
+LEFT OUTER JOIN images i
+ON d.deck_id = i.deck_id
+ORDER BY d.updated_at DESC";
 
-// A PDO::Statement is prepared from the query.
-// $statement = $db->prepare($query);
-
-// Execution on the DB server is delayed until we execute().
-// $statement->execute(); 
+$statement = $db -> prepare($query);
+$statement -> execute(); 
+$decks = $statement -> fetchAll();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
     <?php include './includes/head.php'; ?>
     <body>
-        <h1>Commander Deckbuilder - Deck Search</h1>
+        <h1>Commander Deckbuilder - View and Search Decks</h1>
         <?php include './includes/navbar.php'; ?>
+        <div id="featured">
+            <h2>All Decks</h2>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Deck Name</th>
+                    <th>Commander</th>
+                    <th>Archetype</th>
+                    <th>Last Updated</th>
+                    <th>Created By</th>
+                </tr>
+                <?php foreach ($decks as $deck): ?>
+                    <tr>
+                        <td>
+                            <?php if ($deck['thumbnail_path']): ?>
+                                <img src="<?= $deck['thumbnail_path'] ?>" alt="Deck Thumbnail" />
+                            <?php endif ?>
+                        </td>
+                        <td><a href="view_deck.php?id=<?= $deck['deck_id'] ?>"><?= $deck['title'] ?></a></td>
+                        <td><?= $deck['name'] ?></td>
+                        <td><?= $deck['archetype'] ?></td>
+                        <td><?= $deck['updated_at'] ?></td>
+                        <td><?= $deck['username'] ?></td>
+                    </tr>
+                <?php endforeach ?>
+            </table>
+        </div>
     </body>
     <?php include './includes/footer.php'; ?>
 </html>

@@ -23,37 +23,42 @@ $page_title = "Commander Deckbuilder - Create Deck";
 // Define archetypes.
 // Considerations:
 // lands matter could fit into landfall/ramp?
-$archetypes = [
-    "aggro",
-    "aristocrats",
-    "artifacts",
-    "blink",
-    "cascade",
-    "chaos",
-    "combo",
-    "control",
-    "counters",
-    "enchantress",
-    "graveyard",
-    "group hug",
-    "group slug",
-    "infect",
-    "kindred",
-    "landfall",
-    "lifegain",
-    "midrange",
-    "mill",
-    "ramp",
-    "reanimator",
-    "spellslinger",
-    "stax",
-    "storm",
-    "superfriends",
-    "theft",
-    "tokens",
-    "voltron",
-    "wheel"
-];
+// $archetypes = [
+//     "aggro",
+//     "aristocrats",
+//     "artifacts",
+//     "blink",
+//     "cascade",
+//     "chaos",
+//     "combo",
+//     "control",
+//     "counters",
+//     "enchantress",
+//     "graveyard",
+//     "group hug",
+//     "group slug",
+//     "infect",
+//     "kindred",
+//     "landfall",
+//     "lifegain",
+//     "midrange",
+//     "mill",
+//     "ramp",
+//     "reanimator",
+//     "spellslinger",
+//     "stax",
+//     "storm",
+//     "superfriends",
+//     "theft",
+//     "tokens",
+//     "voltron",
+//     "wheel"
+// ];
+// Fetch archetypes
+$query = "SELECT * FROM archetypes ORDER BY archetype ASC";
+$statement = $db -> prepare($query);
+$statement -> execute();
+$archetypes = $statement -> fetchAll();
 
 // Parses the deck list from the pasted or uploaded text.
 function parse_decklist($decklist_raw) {
@@ -92,15 +97,15 @@ function save_deck($db, $title, $description, $commander_id, $archetype, $user_i
         // Query & binding.
         //  Build the parameterized SQL query and bind to the sanitized values.
         // TODO: Create a dynamic version like in fetch_card.
-        $query = "INSERT INTO decks (user_id, title, description, archetype, card_id) 
-        VALUES (:user_id, :title, :description, :archetype, :card_id)";
+        $query = "INSERT INTO decks (user_id, title, description, archetype_id, card_id) 
+        VALUES (:user_id, :title, :description, :archetype_id, :card_id)";
         $statement = $db -> prepare($query);
 
         //  Bind values to the parameters
         $statement -> bindValue(':user_id', $user_id);
         $statement -> bindValue(':title', $title);
         $statement -> bindValue(':description', $description);
-        $statement -> bindValue(':archetype', $archetype);
+        $statement -> bindValue(':archetype_id', $archetype);
         $statement -> bindValue(':card_id', $commander_id);
 
         //  Execute the INSERT.
@@ -245,7 +250,7 @@ if ($_POST) {
     $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    $archetype = filter_input(INPUT_POST, 'archetype', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $archetype = filter_input(INPUT_POST, 'archetype_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     // $decklist_raw = filter_input(INPUT_POST, 'decklist', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     // Is this safe enough? I need to retain proper string values in order to search API by card name.
@@ -267,10 +272,11 @@ if ($_POST) {
     $upload_error_detected = isset($_FILES['image']) && ($_FILES['image']['error'] > 0);
 
     // TODO: Add better error processing for the below checks.
-    if (!in_array($archetype, $archetypes)) {
-        header("Location: error.php");
-        exit;
-    }
+    // $valid_ids = array_column($archetypes, 'archetype_id');
+    // if (!in_array($archetype, $valid_ids)) {
+    //     header("Location: error.php");
+    //     exit;
+    // }
 
     // If title or content has less than 1 character, display error page.
     if (strlen($title) < 1 || strlen($commander_name) < 1) {
@@ -330,10 +336,12 @@ if ($_POST) {
                 </p>
                 <P>
                     <label for="archetype">Archetype:</label>
-                    <select name="archetype" id="archetype">
+                    <select name="archetype_id" id="archetype" required>
                         <option value="">-- Select Archetype --</option>
                         <?php foreach ($archetypes as $archetype): ?>
-                            <option value="<?= $archetype ?>"><?= ucwords($archetype) ?></option>
+                            <option value="<?= htmlspecialchars($archetype['archetype_id']) ?>">
+                                <?= htmlspecialchars(ucwords($archetype['archetype'])) ?>
+                            </option>
                         <?php endforeach; ?>
                     </select> 
                 </P>

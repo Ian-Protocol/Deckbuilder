@@ -6,15 +6,18 @@ require('./includes/connect.php');
 $page_title = "Commander Deckbuilder";
 
 // TODO: Could fetch as I display them, what's better?
-$query = "SELECT d.deck_id, d.title, d.updated_at, d.archetype,
+$query = "SELECT d.deck_id, d.title, d.updated_at, d.archetype_id,
             c.name,
+            a.archetype_id, a.archetype,
             i.thumbnail_path
 FROM decks d
 JOIN cards c
 ON d.card_id = c.card_id
+JOIN archetypes a
+ON a.archetype_id = d.archetype_id
 LEFT OUTER JOIN images i
 ON d.deck_id = i.deck_id
-ORDER BY updated_at DESC LIMIT 10";
+ORDER BY updated_at DESC LIMIT 5";
 
 $statement = $db -> prepare($query);
 $statement -> execute(); 
