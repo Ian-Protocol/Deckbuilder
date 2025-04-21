@@ -16,14 +16,15 @@ $success_message = [];
 
 $query = "SELECT c.*, u.username
 FROM comments c
-JOIN users u ON u.user_id = c.user_id";
+JOIN users u ON u.user_id = c.user_id
+ORDER BY c.created_at DESC";
 $statement = $db -> prepare($query);
 $statement -> execute(); 
 $comments = $statement -> fetchAll();
 
 // Delete a comment.
 if (isset($_POST['delete-comment'])) {
-    $comment_id = filter_input(INPUT_POST, "comment_id", FILTER_SANITIZE_NUMBER_INT);
+    $comment_id = filter_input(INPUT_POST, "comment-id", FILTER_SANITIZE_NUMBER_INT);
 
     if (!empty($comment_id)) {
         $query = "DELETE FROM comments WHERE comment_id = :comment_id";
@@ -72,7 +73,7 @@ if (isset($_POST['delete-comment'])) {
         <?php foreach ($comments as $comment): ?>
             <tr>
                 <form action="admin_comments.php" method="post">
-                    <input type="hidden" name="comment_id" value="<?= $comment['comment_id'] ?>">
+                    <input type="hidden" name="comment-id" value="<?= $comment['comment_id'] ?>">
                     <td>
                         <?= htmlspecialchars($comment['username']) ?>
                     </td>

@@ -257,51 +257,49 @@ if (isset($_POST['delete-user'])) {
             </fieldset>
         </form>
         <h3>Edit Existing User</h3>
-            <table>
+        <table>
             <tr>
-        <th>Username</th>
-        <th>Role</th>
-        <th>Email</th>
-        <th>Password</th>
-        <th>Re-Enter Password</th>
-        <th colspan="2">Actions</th>
-    </tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Re-Enter Password</th>
+                <th colspan="2">Actions</th>
+            </tr>
 
-    <?php foreach ($users as $user): ?>
-        <tr>
-            <form action="admin_users.php" method="post">
-                <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
-                <td>
-                    <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>">
-                </td>
-                <td>
-                    <select name="role">
-                        <option value="registered" <?= $user['role'] === 'registered' ? 'selected' : '' ?>>Registered</option>
-                        <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>">
-                </td>
-                <td>
-                    <input type="password" name="password" placeholder="New Password">
-                </td>
-                <td>
-                    <input type="password" name="password-reenter" placeholder="Re-enter Password">
-                </td>
-                <td>
-                    <input type="submit" name="update-user" value="Update">
-                </td>
-                <td>
-                    <input type="submit" name="delete-user" value="Delete">
-                </td>
-            </form>
-        </tr>
-    <?php endforeach; ?>
-            </table>
+        <?php foreach ($users as $user): ?>
+            <tr>
+                <form action="admin_users.php" method="post">
+                    <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
+                    <td>
+                        <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>">
+                    </td>
+                    <td>
+                        <select name="role">
+                            <option value="registered" <?= $user['role'] === 'registered' ? 'selected' : '' ?>>Registered</option>
+                            <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>">
+                    </td>
+                    <td>
+                        <input type="password" name="password" placeholder="New Password">
+                    </td>
+                    <td>
+                        <input type="password" name="password-reenter" placeholder="Re-enter Password">
+                    </td>
+                    <td>
+                        <input type="submit" name="update-user" value="Update">
+                    </td>
+                    <td>
+                        <input type="submit" name="delete-user" value="Delete">
+                    </td>
+                </form>
+            </tr>
+        <?php endforeach; ?>
+        </table>
         </form>
-        <h2>Comment Control</h2>
-        <h2>Deck Control</h2>
     </body>
     <?php include './includes/footer.php'; ?>
 </html>

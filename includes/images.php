@@ -3,6 +3,8 @@ require 'C:\xampp\htdocs\_Assignments\php-image-resize-master\lib\ImageResize.ph
 require 'C:\xampp\htdocs\_Assignments\php-image-resize-master\lib\ImageResizeException.php';
 use \Gumlet\ImageResize;
 
+// TODO: Do not replace if the image is not valid.
+
 const REGULAR_WIDTH = 400;
 const THUMBAIL_WIDTH = 50;
 const UPLOAD_SUBFOLDER_NAME = 'uploads';
