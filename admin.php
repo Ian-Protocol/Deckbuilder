@@ -20,6 +20,7 @@ $page_title = "Admin Control Panel";
         <a href="admin_users.php"><h2>User Control</h2></a>
         <a href="admin_comments.php"><h2>Comment Control</h2></a>
         <a href="admin_decks.php"><h2>Deck Control</h2></a>
+        <a href="admin_archetypes.php"><h2>Archetype Control</h2></a>
     </body>
     <?php include './includes/footer.php'; ?>
 </html>

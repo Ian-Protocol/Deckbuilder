@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+// TODO: Add ASC and DESC options for user.
 $admin = isset($_SESSION['role']) && $_SESSION['role'] == 'admin';
 
 if (!$admin) {
