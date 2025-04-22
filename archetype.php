@@ -2,18 +2,17 @@
 session_start();
 require './includes/connect.php';
 
-$archetype_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$archetype_id = filter_input(INPUT_GET, 'archetype', FILTER_VALIDATE_INT);
 
-// Validate archetype
-$query = "SELECT archetype FROM archetypes WHERE archetype_id = :id";
-$statement = $db->prepare($query);
-$statement->bindValue(':id', $archetype_id);
-$statement->execute();
-$archetype = $statement->fetch();
-
-if (!$archetype) {
-    echo "Invalid archetype.";
-    exit;
+if ($archetype_id) {
+    // Validate archetype
+    $query = "SELECT * FROM archetypes WHERE archetype_id = :archetype_id";
+    $statement = $db -> prepare($query);
+    $statement -> bindValue(':archetype_id', $archetype_id);
+    $statement -> execute();
+    $archetype = $statement -> fetch();
+} else {
+    // TODO: Error here.
 }
 
 // Fetch decks by archetype.
@@ -24,12 +23,12 @@ $query = "SELECT d.deck_id, d.title, d.updated_at, u.username,
     JOIN cards c ON d.card_id = c.card_id
     JOIN archetypes a ON d.archetype_id = a.archetype_id
     LEFT JOIN images i ON d.deck_id = i.deck_id
-    WHERE d.archetype_id = :id
+    WHERE d.archetype_id = :archetype_id
     ORDER BY d.updated_at DESC";
-$statement = $db->prepare($query);
-$statement->bindValue(':id', $archetype_id);
-$statement->execute();
-$decks = $statement->fetchAll();
+$statement = $db -> prepare($query);
+$statement -> bindValue(':archetype_id', $archetype_id);
+$statement -> execute();
+$decks = $statement -> fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +37,7 @@ $decks = $statement->fetchAll();
 <body>
 <?php include './includes/navbar.php'; ?>
 
-<h1><?= htmlspecialchars(ucwords($archetype['archetype'])) ?> Decks</h1>
+<h1><?= $archetype['archetype'] ?> Decks</h1>
 
 <?php if (count($decks) === 0): ?>
     <p>No decks found for this archetype.</p>
