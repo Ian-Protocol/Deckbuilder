@@ -195,7 +195,7 @@ if (isset($_POST['delete-user'])) {
     $user_id = filter_input(INPUT_POST, "user_id", FILTER_SANITIZE_NUMBER_INT);
 
     // Prevent admin from deleting themselves.
-    if ($user_id === $_SESSION['user_id']) {
+    if ($user_id == $_SESSION['user_id']) {
         $error_message[] = "You cannot delete your own account while logged in.";
     }
 
