@@ -49,7 +49,7 @@ $decks = $statement -> fetchAll();
                         </td>
                         <td><a href="view_deck.php?id=<?= $deck['deck_id'] ?>"><?= $deck['title'] ?></a></td>
                         <td><?= $deck['name'] ?></td>
-                        <td><?= $deck['archetype'] ?></td>
+                        <td><?= ucwords($deck['archetype']) ?></td>
                         <td><?= $deck['updated_at'] ?></td>
                     </tr>
                 <?php endforeach ?>

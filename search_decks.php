@@ -43,7 +43,7 @@ $archetypes = $statement->fetchAll();
         <form action="archetype.php" method="get">
             <select id="archetype" name="archetype">
                 <?php foreach ($archetypes as $archetype): ?>
-                        <option value="<?= $archetype['archetype_id'] ?>"><?= $archetype['archetype'] ?></option>
+                        <option value="<?= $archetype['archetype_id'] ?>"><?= ucwords($archetype['archetype']) ?></option>
                 <?php endforeach; ?>
             </select>
             <input type="submit" value="Go">
@@ -68,7 +68,7 @@ $archetypes = $statement->fetchAll();
                         </td>
                         <td><a href="view_deck.php?id=<?= $deck['deck_id'] ?>"><?= $deck['title'] ?></a></td>
                         <td><?= $deck['name'] ?></td>
-                        <td><?= $deck['archetype'] ?></td>
+                        <td><?= ucwords($deck['archetype']) ?></td>
                         <td><?= $deck['updated_at'] ?></td>
                         <td><?= $deck['username'] ?></td>
                     </tr>

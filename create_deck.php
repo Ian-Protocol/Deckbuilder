@@ -15,45 +15,8 @@ require './includes/connect.php';
 require './includes/images.php';
 
 $page_title = "Commander Deckbuilder - Create Deck";
+$error_message = [];
 
-// TODO: Figure out users.
-// Perhaps with sessions! $user_id = $_SESSION['user_id'];
-// Admin is id 1.
-
-// Define archetypes.
-// Considerations:
-// lands matter could fit into landfall/ramp?
-// $archetypes = [
-//     "aggro",
-//     "aristocrats",
-//     "artifacts",
-//     "blink",
-//     "cascade",
-//     "chaos",
-//     "combo",
-//     "control",
-//     "counters",
-//     "enchantress",
-//     "graveyard",
-//     "group hug",
-//     "group slug",
-//     "infect",
-//     "kindred",
-//     "landfall",
-//     "lifegain",
-//     "midrange",
-//     "mill",
-//     "ramp",
-//     "reanimator",
-//     "spellslinger",
-//     "stax",
-//     "storm",
-//     "superfriends",
-//     "theft",
-//     "tokens",
-//     "voltron",
-//     "wheel"
-// ];
 // Fetch archetypes
 $query = "SELECT * FROM archetypes ORDER BY archetype ASC";
 $statement = $db -> prepare($query);
@@ -249,22 +212,24 @@ if ($_POST) {
     //  Sanitize user input to escape HTML entities and filter out dangerous characters.
     $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-
     $archetype = filter_input(INPUT_POST, 'archetype_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     // $decklist_raw = filter_input(INPUT_POST, 'decklist', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     // Is this safe enough? I need to retain proper string values in order to search API by card name.
     // Retrieve the input while stripping HTML tags and retaining special characters
-    $decklist_raw = strip_tags(filter_input(INPUT_POST, 'decklist', FILTER_DEFAULT));
-    $decklist_raw = htmlspecialchars_decode($decklist_raw, ENT_QUOTES);
+    $decklist_raw = filter_input(INPUT_POST, 'decklist', FILTER_DEFAULT);
+    // Replace all other line endings with \n.
     $decklist_raw = str_replace(["\r\n", "\r"], "\n", $decklist_raw);
-    $decklist_raw = preg_replace('/[^a-zA-Z0-9\s\-\'\/(",:]/u', '', $decklist_raw);
+    // Keep characters found in magic card names incl ASCII chars.
+    // Replaces the rest, essentially sanitizing it.
+    // Testing the effect of not escaping the + char since "+2 Mace" did not show up in the database.
+    // Confirmed it exists in the MTG API.
+    $decklist_raw = preg_replace('/[^\p{L}\p{N}\s\-\'\/"(),:+]/u', '', $decklist_raw);
     $decklist_raw = trim($decklist_raw);
 
-    $commander_name = strip_tags(filter_input(INPUT_POST, 'commander', FILTER_DEFAULT));
-    $commander_name = htmlspecialchars_decode($commander_name, ENT_QUOTES);
+    $commander_name = filter_input(INPUT_POST, 'commander', FILTER_DEFAULT);
     $commander_name = str_replace(["\r\n", "\r"], "\n", $commander_name);
-    $commander_name = preg_replace('/[^a-zA-Z0-9\s\-\'\/(",:]/u', '', $commander_name);
+    $commander_name = preg_replace('/[^\p{L}\p{N}\s\-\'\/"(),:+]/u', '', $commander_name);
     $commander_name = trim($commander_name);
 
 
@@ -279,14 +244,16 @@ if ($_POST) {
     // }
 
     // If title or content has less than 1 character, display error page.
-    if (strlen($title) < 1 || strlen($commander_name) < 1) {
-        header("Location: error.php");
-        exit;
+    if (strlen($title) < 1) {
+        $error_message[] = "Title cannot be empty";
     }
 
-    if (empty($decklist_raw)) {
-        header("Location: error.php");
-        exit;
+    if (strlen($commander_name) < 1) {
+        $error_message[] = "Commander name cannot be empty";
+    }
+
+    if (strlen($decklist_raw) < 1) {
+        $error_message[] = "Decklist cannot be empty";
     }
 
     // Find commander id.
@@ -314,6 +281,13 @@ if ($_POST) {
     <body>
         <h1>Commander Deckbuilder - Create Deck</h1>
         <?php include './includes/navbar.php'; ?>
+        <?php if (!empty($error_message)): ?>
+            <div id="message">
+                <?php foreach ($error_message as $message): ?>
+                    <p><?= $message ?></p>
+                <?php endforeach ?>
+            </div>
+        <?php endif ?>
         <form action="create_deck.php" method="post" enctype="multipart/form-data">
             <fieldset>
                 <legend>New Deck</legend>

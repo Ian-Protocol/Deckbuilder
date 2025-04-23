@@ -24,15 +24,19 @@ if (isset($_POST['create-archetype'])) {
     // Sanitize archetype input to escape HTML entities and filter out dangerous characters.
     $archetype = trim(filter_input(INPUT_POST, 'archetype', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
-    $archetype_query = "SELECT archetype_id FROM archetypes WHERE archetype = :archetype";
-    $statement = $db -> prepare($archetype_query);
-    $statement -> bindValue('archetype', $archetype);
-    $statement -> execute();
-
-    if ($statement -> fetch()) {
-        $error_message[] = "Archetype already exists.";
+    if (strlen($archetype) > 0) {
+        $archetype_query = "SELECT archetype_id FROM archetypes WHERE archetype = :archetype";
+        $statement = $db -> prepare($archetype_query);
+        $statement -> bindValue('archetype', $archetype);
+        $statement -> execute();
+    
+        if ($statement -> fetch()) {
+            $error_message[] = "Archetype already exists.";
+        }
+    } else {
+        $error_message[] = "Invalid archetype";
     }
-
+    
     if (empty($error_message)) {
         $query = "INSERT INTO archetypes (archetype) VALUES (:archetype)";
         $statement = $db -> prepare($query);
@@ -60,7 +64,7 @@ if (isset($_POST['update-archetype'])) {
     $current_archetype_data = $statement -> fetch();
 
     // Check if archetype is different and valid.
-    if ($archetype !== $current_archetype_data['archetype']) {
+    if ($archetype !== $current_archetype_data['archetype'] && strlen($archetype) > 0) {
         
         // Check if archetype already exists.
         $archetype_query = "SELECT archetype_id FROM archetypes WHERE archetype = :archetype AND archetype_id != :archetype_id";
@@ -85,6 +89,8 @@ if (isset($_POST['update-archetype'])) {
                 $error_message[] = "Error updating archetype";
             }
         }
+    } else {
+        $error_message[] = "Invalid archetype";
     }
 }
 
