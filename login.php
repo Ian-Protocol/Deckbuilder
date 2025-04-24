@@ -7,9 +7,8 @@ $messages = [];
 $login_successful = false;
 
 if ($_POST) {
-    // Should I sanitize this value?
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+    $password_raw = $_POST['password'];
 
     $query = "SELECT * FROM users WHERE username = :username";
     $statement = $db -> prepare($query);
@@ -21,7 +20,7 @@ if ($_POST) {
     if ($user) {
         $password_hash = $user['password'];
 
-        if (password_verify($password, $password_hash)) {
+        if (password_verify($password_raw, $password_hash)) {
             $messages[] = "Login successful!";
             $login_successful = true;
 
