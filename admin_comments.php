@@ -51,14 +51,14 @@ if (isset($_POST['delete-comment'])) {
         <?php include './includes/navbar.php'; ?>
         </header>
         <?php if (!empty($error_message)): ?>
-            <div class="message">
+            <div id="message">
                 <?php foreach ($error_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>
             </div>
         <?php endif ?>
         <?php if (!empty($success_message)): ?>
-            <div class="message">
+            <div id="message">
                 <?php foreach ($success_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>
@@ -74,25 +74,24 @@ if (isset($_POST['delete-comment'])) {
             </tr>
         <?php foreach ($comments as $comment): ?>
             <tr class="deck">
-                <form action="admin_comments.php" method="post">
-                    <input type="hidden" name="comment-id" value="<?= $comment['comment_id'] ?>">
                     <td>
-                        <?= htmlspecialchars($comment['username']) ?>
+                        <?= $comment['username'] ?>
                     </td>
                     <td>
-                        <?= htmlspecialchars($comment['content']) ?>
+                        <?= $comment['content'] ?>
                     </td>
                     <td>
-                        <?= htmlspecialchars($comment['created_at']) ?>
+                        <?= $comment['created_at'] ?>
                     </td>
                     <td>
-                        <input type="submit" name="delete-comment" value="Delete">
+                        <form action="admin_comments.php" method="post">
+                            <input type="hidden" name="comment-id" value="<?= $comment['comment_id'] ?>">
+                            <input type="submit" name="delete-comment" value="Delete">
+                        </form>
                     </td>
-                </form>
             </tr>
         <?php endforeach; ?>
         </table>
-        </form>
     <?php include './includes/footer.php'; ?>
     </body>
 </html>

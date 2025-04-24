@@ -259,48 +259,30 @@ if (isset($_POST['delete-user'])) {
             </fieldset>
         </form>
         <h3>Edit Existing User</h3>
-        <table>
-            <tr class="deck">
-                <th>Username</th>
-                <th>Role</th>
-                <th>Email</th>
-                <th>Password</th>
-                <th>Re-Enter Password</th>
-                <th colspan="2">Actions</th>
-            </tr>
-
         <?php foreach ($users as $user): ?>
-            <tr class="deck">
-                <form action="admin_users.php" method="post">
-                    <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
-                    <td>
-                        <input type="text" name="username" value="<?= $user['username'] ?>">
-                    </td>
-                    <td>
-                        <select name="role">
+            <form action="admin_users.php" method="post">
+            <fieldset>
+                <table>
+                    <tr class="deck">
+                        <td><label for="username-<?= $user['user_id'] ?>">Username:</label><input type="text" id="username-<?= $user['user_id'] ?>" name="username" value="<?= $user['username'] ?>"></td>
+                        <td><label for="role-<?= $user['user_id'] ?>">Role:</label>
+                        <select name="role" id="role-<?= $user['user_id'] ?>">
                             <option value="registered" <?= $user['role'] === 'registered' ? 'selected' : '' ?>>Registered</option>
                             <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="email" name="email" value="<?= $user['email'] ?>">
-                    </td>
-                    <td>
-                        <input type="password" name="password" placeholder="New Password">
-                    </td>
-                    <td>
-                        <input type="password" name="password-reenter" placeholder="Re-enter Password">
-                    </td>
-                    <td>
+                        </select></td>
+                        <td><label for="email-<?= $user['user_id'] ?>">Email:</label><input type="email" name="email" id="email-<?= $user['user_id'] ?>" value="<?= $user['email'] ?>"></td>
+                        <td><label for="password-<?= $user['user_id'] ?>">Password:</label><input type="password" name="password" id="password-<?= $user['user_id'] ?>" placeholder="New Password"></td>
+                        <td><label for="password-reenter-<?= $user['user_id'] ?>">Re-Enter Password:</label><input type="password" name="password-reenter" id="password-reenter-<?= $user['user_id'] ?>" placeholder="Re-enter Password"></td>
+                        <td>
+                        <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
                         <input type="submit" name="update-user" value="Update">
-                    </td>
-                    <td>
                         <input type="submit" name="delete-user" value="Delete">
-                    </td>
-                </form>
-            </tr>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            </form>
         <?php endforeach; ?>
-        </table>
     <?php include './includes/footer.php'; ?>
     </body>
 </html>

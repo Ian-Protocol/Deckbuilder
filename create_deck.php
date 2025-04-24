@@ -286,7 +286,7 @@ if ($_POST) {
         <?php include './includes/navbar.php'; ?>
         </header>
         <?php if (!empty($error_message)): ?>
-            <div class="message">
+            <div id="message">
                 <?php foreach ($error_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>

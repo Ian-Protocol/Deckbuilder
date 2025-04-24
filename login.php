@@ -53,7 +53,7 @@ if ($_POST) {
                 <input type="submit" value="Log In">
             </form>
         </div>
-        <div class="message">
+        <div id="message">
             <?php if ($login_successful): ?>
                 <?php foreach ($messages as $message): ?>
                     <p><?= $message ?></p>

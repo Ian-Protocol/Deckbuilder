@@ -121,14 +121,14 @@ if (isset($_POST['delete-archetype'])) {
         <?php include './includes/navbar.php'; ?>
         </header>
         <?php if (!empty($error_message)): ?>
-            <div class="message">
+            <div id="message">
                 <?php foreach ($error_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>
             </div>
         <?php endif ?>
         <?php if (!empty($success_message)): ?>
-            <div class="message">
+            <div id="message">
                 <?php foreach ($success_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>
@@ -147,29 +147,16 @@ if (isset($_POST['delete-archetype'])) {
             </fieldset>
         </form>
         <h3>Edit Existing Archetype</h3>
-        <table>
-            <tr class="deck">
-                <th>Archetype</th>
-                <th colspan="2">Actions</th>
-            </tr>
         <?php foreach ($archetypes as $archetype): ?>
-            <tr class="deck">
+            <div class="comment">
                 <form action="admin_archetypes.php" method="post">
+                    <input type="text" name="archetype" value="<?= $archetype['archetype'] ?>">
                     <input type="hidden" name="archetype-id" value="<?= $archetype['archetype_id'] ?>">
-                    <td>
-                        <input type="text" name="archetype" value="<?= htmlspecialchars($archetype['archetype']) ?>">
-                    </td>
-                    <td>
-                        <input type="submit" name="update-archetype" value="Update">
-                    </td>
-                    <td>
-                        <input type="submit" name="delete-archetype" value="Delete">
-                    </td>
+                    <input type="submit" name="update-archetype" value="Update">
+                    <input type="submit" name="delete-archetype" value="Delete">
                 </form>
-            </tr>
+            </div>
         <?php endforeach; ?>
-        </table>
-        </form>
     <?php include './includes/footer.php'; ?>
     </body>
 </html>

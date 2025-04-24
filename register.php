@@ -87,14 +87,14 @@ if ($_POST) {
             </form>
         </div>
         <?php if (!empty($error_message)): ?>
-            <div class="message">
+            <div id="message">
                 <?php foreach ($error_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>
             </div>
         <?php endif ?>
         <?php if (!empty($success_message)): ?>
-            <div class="message">
+            <div id="message">
                 <?php foreach ($success_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>

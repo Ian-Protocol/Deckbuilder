@@ -94,14 +94,14 @@ $decks = $statement -> fetchAll();
         <?php include './includes/navbar.php'; ?>
         </header>
         <?php if (!empty($error_message)): ?>
-            <div class="message">
+            <div id="message">
                 <?php foreach ($error_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>
             </div>
         <?php endif ?>
         <?php if (!empty($success_message)): ?>
-            <div class="message">
+            <div id="message">
                 <?php foreach ($success_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>
@@ -126,15 +126,13 @@ $decks = $statement -> fetchAll();
                 <th>Date Updated</th>
                 <th>Date Created</th>
                 <th>Created By</th>
-                <th colspan="2">Actions</th>
+                <th>Actions</th>
             </tr>
         <?php foreach ($decks as $deck): ?>
             <tr class="deck">
-                <form action="admin_decks.php" method="post">
-                    <input type="hidden" name="deck-id" value="<?= $deck['deck_id'] ?>">
                     <td>
                         <?php if ($deck['thumbnail_path']): ?>
-                            <img src="<?= $deck['thumbnail_path'] ?>" alt="Deck Thumbnail" />
+                            <img src="<?= str_replace('\\', '/', $deck['thumbnail_path']) ?>" alt="Deck Thumbnail" />
                         <?php endif ?>
                     </td>
                     <td>
@@ -153,14 +151,15 @@ $decks = $statement -> fetchAll();
                         <?= $deck['username'] ?>
                     </td>
                     <td>
+                    <form action="admin_decks.php" method="post">
+                    <input type="hidden" name="deck-id" value="<?= $deck['deck_id'] ?>">
                         <input type="submit" name="edit-deck" value="Edit">
                         <input type="submit" name="delete-deck" value="Delete">
+                    </form>
                     </td>
-                </form>
             </tr>
         <?php endforeach; ?>
         </table>
-        </form>
-    <?php include './includes/footer.php'; ?>
+        <?php include './includes/footer.php'; ?>
     </body>
 </html>

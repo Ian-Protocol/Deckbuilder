@@ -37,6 +37,10 @@ table {
   margin: 0px auto;
 }
 
+fieldset {
+  border-color: #c060a1;
+}
+
 .deck {
   margin: 10px;
   padding: 15px;
