@@ -53,7 +53,7 @@ if ($_POST) {
                 <input type="submit" value="Log In">
             </form>
         </div>
-        <div id="message">
+        <div class="message">
             <?php if ($login_successful): ?>
                 <?php foreach ($messages as $message): ?>
                     <p><?= $message ?></p>
@@ -65,6 +65,6 @@ if ($_POST) {
                 <?php endforeach ?>
             <?php endif ?>
         </div>
+        <?php include './includes/footer.php'; ?>
     </body>
-    <?php include './includes/footer.php'; ?>
 </html>

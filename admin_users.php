@@ -225,14 +225,14 @@ if (isset($_POST['delete-user'])) {
         <?php include './includes/navbar.php'; ?>
         </header>
         <?php if (!empty($error_message)): ?>
-            <div id="message">
+            <div class="message">
                 <?php foreach ($error_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>
             </div>
         <?php endif ?>
         <?php if (!empty($success_message)): ?>
-            <div id="message">
+            <div class="message">
                 <?php foreach ($success_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>
@@ -274,7 +274,7 @@ if (isset($_POST['delete-user'])) {
                 <form action="admin_users.php" method="post">
                     <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
                     <td>
-                        <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>">
+                        <input type="text" name="username" value="<?= $user['username'] ?>">
                     </td>
                     <td>
                         <select name="role">
@@ -283,7 +283,7 @@ if (isset($_POST['delete-user'])) {
                         </select>
                     </td>
                     <td>
-                        <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>">
+                        <input type="email" name="email" value="<?= $user['email'] ?>">
                     </td>
                     <td>
                         <input type="password" name="password" placeholder="New Password">
@@ -301,7 +301,6 @@ if (isset($_POST['delete-user'])) {
             </tr>
         <?php endforeach; ?>
         </table>
-        </form>
-    </body>
     <?php include './includes/footer.php'; ?>
+    </body>
 </html>

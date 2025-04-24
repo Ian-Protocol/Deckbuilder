@@ -124,7 +124,7 @@ if ($_POST) {
             <h1><?= $deck['title'] . " - by " . $deck_owner_username ?></h1>
             <h2>Commander: <?= $deck['name'] ?></h2>
             <?php if ($deck['regular_path'] != ""): ?>
-                <img src="<?= $deck['regular_path'] ?>" alt="Deck Image" />
+                <img src="<?= str_replace('\\', '/', $deck['regular_path']) ?>" alt="Deck Image" />
             <?php endif ?>
             <h3>Description</h3>
             <?= $deck['description'] ?>
@@ -165,12 +165,12 @@ if ($_POST) {
         <?php if ($can_comment): ?>
             <form action="view_deck.php?id=<?= $deck_id ?>" method="post">
                 <fieldset>
-                    <label for="comment"><h3>Leave a Comment</h3></label>
+                    <label for="comment"><b>Leave a Comment</b></label>
                     <textarea name="comment" id="comment"></textarea>
                     <input type="submit" value="Submit">
                 </fieldset>
             </form>
         <?php endif ?>
+        <?php include './includes/footer.php'; ?>
     </body>
-    <?php include './includes/footer.php'; ?>
 </html>

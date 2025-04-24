@@ -46,7 +46,7 @@ $decks = $statement -> fetchAll();
                     <tr class="deck">
                         <td>
                             <?php if ($deck['thumbnail_path']): ?>
-                                <img src="<?= $deck['thumbnail_path'] ?>" alt="Deck Thumbnail" />
+                                <img src="<?= str_replace('\\', '/', $deck['thumbnail_path']) ?>" alt="Deck Thumbnail" />
                             <?php endif ?>
                         </td>
                         <td><a href="view_deck.php?id=<?= $deck['deck_id'] ?>"><?= $deck['title'] ?></a></td>
@@ -57,6 +57,6 @@ $decks = $statement -> fetchAll();
                 <?php endforeach ?>
             </table>
         </main>
+        <?php include './includes/footer.php'; ?>
     </body>
-    <?php include './includes/footer.php'; ?>
 </html>

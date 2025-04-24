@@ -121,14 +121,14 @@ if (isset($_POST['delete-archetype'])) {
         <?php include './includes/navbar.php'; ?>
         </header>
         <?php if (!empty($error_message)): ?>
-            <div id="message">
+            <div class="message">
                 <?php foreach ($error_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>
             </div>
         <?php endif ?>
         <?php if (!empty($success_message)): ?>
-            <div id="message">
+            <div class="message">
                 <?php foreach ($success_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>
@@ -152,7 +152,6 @@ if (isset($_POST['delete-archetype'])) {
                 <th>Archetype</th>
                 <th colspan="2">Actions</th>
             </tr>
-
         <?php foreach ($archetypes as $archetype): ?>
             <tr class="deck">
                 <form action="admin_archetypes.php" method="post">
@@ -171,6 +170,6 @@ if (isset($_POST['delete-archetype'])) {
         <?php endforeach; ?>
         </table>
         </form>
-    </body>
     <?php include './includes/footer.php'; ?>
+    </body>
 </html>

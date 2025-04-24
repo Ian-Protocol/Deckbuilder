@@ -35,7 +35,7 @@ function file_is_valid($temporary_path, $new_path) {
 }
 
 function upload_image($db, $deck_id) {
-    $image_filename        = $_FILES['image']['name'];
+    $image_filename        = str_replace(' ', '_', $_FILES['image']['name']);
     $temporary_image_path  = $_FILES['image']['tmp_name'];
     $new_image_path        = file_upload_path($image_filename);
 

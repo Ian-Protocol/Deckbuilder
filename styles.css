@@ -73,6 +73,15 @@ table {
   background-color: #1d1d1d;
 }
 
+/* #decklist {
+  margin: 25px auto;
+  padding: 15px;
+  width: 75%;
+  border: 1px solid #c060a1;
+  border-radius: 5px;
+  background-color: #1d1d1d;
+} */
+
 .deck:hover {
   background-color: #222;
   border-color: #eb6123;

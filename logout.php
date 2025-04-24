@@ -17,6 +17,6 @@ $page_title = "Commander Deckbuilder - Log Out";
             <h2>Farewell 4{W}{W}</h2>
             You are logged out. <a href="index.php">Return to home page</a>
         </div>
+        <?php include './includes/footer.php'; ?>
     </body>
-    <?php include './includes/footer.php'; ?>
 </html>

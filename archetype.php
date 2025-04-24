@@ -3,6 +3,7 @@ session_start();
 require './includes/connect.php';
 
 $archetype_id = filter_input(INPUT_GET, 'archetype', FILTER_VALIDATE_INT);
+$page_title = "Commander Deckbuilder - View Archetypes";
 
 if ($archetype_id) {
     // Validate archetype
@@ -58,7 +59,7 @@ $archetypes = $statement->fetchAll();
     </div>
     <h2><?= ucwords($selected_archetype['archetype']) ?> Decks</h2>
     <?php if (count($decks) === 0): ?>
-        <p><h3>No decks found for this archetype.</h3></p>
+        <h3>No decks found for this archetype.</h3>
     <?php else: ?>
     <div id="featured">
         <table>
@@ -74,7 +75,7 @@ $archetypes = $statement->fetchAll();
                 <tr class="deck">
                     <td>
                         <?php if (!empty($deck['thumbnail_path'])): ?>
-                            <img src="<?= $deck['thumbnail_path'] ?>" alt="Deck Thumbnail" />
+                            <img src="<?= str_replace('\\', '/', $deck['thumbnail_path']) ?>" alt="Deck Thumbnail" />
                         <?php endif; ?>
                     </td>
                     <td><a href="view_deck.php?id=<?= $deck['deck_id'] ?>"><?= $deck['title'] ?></a></td>
@@ -87,7 +88,6 @@ $archetypes = $statement->fetchAll();
         </table>
     </div>
 <?php endif; ?>
-
 <?php include './includes/footer.php'; ?>
 </body>
 </html>

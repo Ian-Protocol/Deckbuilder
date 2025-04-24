@@ -13,6 +13,6 @@ $page_title = "Commander Deckbuilder - Error";
         <div id="error">
             <h2>You have encountered an error!</h2>
         </div>
+        <?php include './includes/footer.php'; ?>
     </body>
-    <?php include './includes/footer.php'; ?>
 </html>

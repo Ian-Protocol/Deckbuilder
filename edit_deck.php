@@ -218,7 +218,7 @@ if (isset($_POST['update'])) {
         <?php include './includes/navbar.php'; ?>
         </header>
         <?php if (!empty($error_message)): ?>
-            <div id="message">
+            <div class="message">
                 <?php foreach ($error_message as $message): ?>
                     <p><?= $message ?></p>
                 <?php endforeach ?>
@@ -244,7 +244,7 @@ if (isset($_POST['update'])) {
                 </p>
                 <p>
                     <?php if ($deck['regular_path'] != ""): ?> 
-                        <img src="<?= $deck['regular_path'] ?>" alt="Deck Image" /><br>
+                        <img src="<?= str_replace('\\', '/', $deck['regular_path']) ?>" alt="Deck Image" /><br>
                         <label for="delete-image">Delete Image</label>
                         <input name="delete-image" id="delete-image" type="checkbox"><br>
                         <label for="image">Update Image</label>
@@ -257,7 +257,6 @@ if (isset($_POST['update'])) {
                     <label for="description">Description:</label>
                     <textarea name="description" id="description"><?= $deck['description'] ?></textarea>
                 </p>
-            </div>
             </div>
                 <table>
                     <tr class="deck">
@@ -276,6 +275,7 @@ if (isset($_POST['update'])) {
             <input type="submit" name="update" value="Update Deck">
             <input type="submit" name="delete" value="Delete Deck">
         </form>
+        </div>
+        <?php include './includes/footer.php'; ?>
     </body>
-    <?php include './includes/footer.php'; ?>
 </html>
