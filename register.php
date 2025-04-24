@@ -72,9 +72,10 @@ if ($_POST) {
 <html lang="en">
     <?php include './includes/head.php'; ?>
     <body>
-        <h1>Commander Deckbuilder - Resigster</h1>
+        <header>
+        <h1>Commander Deckbuilder - Register</h1>
         <?php include './includes/navbar.php'; ?>
-
+        </header>
         <div id="register">
             <h2>Sign up to start building and enjoy the community!</h2>
             <form action="register.php" method="post">

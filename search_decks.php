@@ -37,9 +37,11 @@ $archetypes = $statement->fetchAll();
 <html lang="en">
     <?php include './includes/head.php'; ?>
     <body>
-        <h1>Commander Deckbuilder - View and Search Decks</h1>
+        <header>
+        <h1>Commander Deckbuilder - View Decks</h1>
         <?php include './includes/navbar.php'; ?>
-        <h2>Browse by Archetype</h2>
+        </header>
+        <h1>Browse by Archetype</h1>
         <form action="archetype.php" method="get">
             <select id="archetype" name="archetype">
                 <?php foreach ($archetypes as $archetype): ?>
@@ -60,7 +62,7 @@ $archetypes = $statement->fetchAll();
                     <th>Created By</th>
                 </tr>
                 <?php foreach ($decks as $deck): ?>
-                    <tr>
+                    <tr class="deck">
                         <td>
                             <?php if ($deck['thumbnail_path']): ?>
                                 <img src="<?= $deck['thumbnail_path'] ?>" alt="Deck Thumbnail" />

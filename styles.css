@@ -1,4 +1,329 @@
+/* Global content. */
+
+* {
+  box-sizing: border-box;
+  list-style: none;
+}
+
+html {
+  margin: 0px;
+  padding: 0px;
+  background-color: #111;
+  color: #f1d4d4;
+  font-family: Grenze, Geneva, Tahoma, sans-serif;
+}
+
+.highlight {
+  color: #eb6123;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #eb6123;
+}
+
+a {
+  color: #df84c2;
+}
+
+a:active {
+  background-color: #7e0b95;
+}
+
+table {
+  margin: 0px auto;
+}
+
+.deck {
+  margin: 10px;
+  padding: 15px;
+  padding-bottom: 30px;
+  /* width: 250px; */
+  font-size: 16pt;
+  border: 1px solid #c060a1;
+  border-radius: 5px;
+  text-align: center;
+  background-color: #1d1d1d;
+}
+
+#register {
+  margin: 10px;
+  padding: 15px;
+  padding-bottom: 30px;
+  /* width: 250px; */
+  font-size: 16pt;
+  border: 1px solid #c060a1;
+  border-radius: 5px;
+  text-align: center;
+  background-color: #1d1d1d;
+}
+
+.deck:hover {
+  background-color: #222;
+  border-color: #eb6123;
+}
+
+div#main-navigation {
+  margin: 10px auto;
+  background-image: linear-gradient(to right, #7e0b95, #000);
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+
+div#main-navigation nav ul {
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
+div#main-navigation nav ul li {
+  /* margin: 0px 15px; */
+  margin: auto;
+}
+
+div#main-navigation nav ul li a {
+  color: #f1d4d4;
+  font-size: 16pt;
+  padding: 5px 10px;
+  text-decoration: none;
+}
+
+div#main-navigation nav ul li a:hover {
+  background-color: #eb6123;
+  color: white;
+  border-radius: 5px;
+}
+
+/* .card-image {
+  border-radius: 11px;
+  max-width: 200px;
+} */
+
+.card-name {
+  height: 40px;
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit {
+  font-size: 11pt;
+  font-weight: bold;
+  margin-left: 5px;
+  background-color: #1d1d1d;
+  border: 1px solid #eb6123;
+  border-radius: 5px;
+  color: #f1d4d4;
+  text-align: center;
+  padding: 5px 0px;
+  width: 40px;
+}
+
+.submit:hover {
+  border-color: #e2662c;
+  background-color: #444;
+  color: white;
+}
+
+/* TODO: Mess around with the edit quantities */
+.increment-button {
+  font-size: 11pt;
+  font-weight: bold;
+  background-color: #1d1d1d;
+  border: 1px solid #c060a1;
+  width: 25px;
+  border-radius: 5px;
+  color: #f1d4d4;
+  text-align: center;
+  padding: 5px 0px;
+}
+
+.increment-button:hover {
+  border-color: #eb6123;
+  background-color: #444;
+  color: white;
+}
+
+.quantity-input {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  font-size: 11pt;
+  font-weight: bold;
+  width: 40px;
+  background-color: #1d1d1d;
+  border: 1px solid #c060a1;
+  border-radius: 5px;
+  color: #f1d4d4;
+  text-align: center;
+  margin: 0px 5px;
+  padding: 5px 0px;
+  /* appearance: none; */
+}
+
+/* TODO: viewing cards */
+.card-area {
+  margin: 25px auto;
+  padding: 15px;
+  width: 75%;
+  font-size: 16pt;
+  border: 1px solid #c060a1;
+  border-radius: 5px;
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Wide content. */
+header {
+  margin: 0px auto;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-image: linear-gradient(
+      to right,
+      rgba(106, 9, 125, 1),
+      rgba(106, 9, 125, 0)
+    ),
+    url("images/galaxy-banner.png");
+  width: 100%;
+  height: 100px;
+  border-radius: 5px;
+  position: fixed;
+}
+
 body {
-  background-color: black;
-  color: aliceblue;
+  margin-top: 210px;
+}
+
+header h1 {
+  margin: 0px;
+  padding-top: 0px;
+  padding-left: 5%;
+  font-size: 36pt;
+}
+
+header h2 {
+  margin: 0px;
+  font-size: 26pt;
+  padding-left: 5%;
+  font-style: italic;
+  position: relative;
+  top: -20px;
+}
+
+/* Narrow content. */
+@media (max-width: 800px) {
+  header {
+    margin: 0px auto;
+    top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-image: linear-gradient(
+        to right,
+        rgba(106, 9, 125, 1),
+        rgba(106, 9, 125, 0)
+      ),
+      url("images/galaxy-banner.png");
+    width: 100%;
+    height: 90px;
+    border-radius: 5px;
+    position: fixed;
+  }
+
+  body {
+    margin-top: 120px;
+  }
+
+  header h1 {
+    margin-top: 0px;
+    padding-top: 0px;
+    padding-left: 5%;
+    font-size: 24pt;
+  }
+
+  header h2 {
+    display: none;
+  }
+}
+
+/* Main content. */
+
+div#main-text {
+  margin: 25px auto;
+  padding: 15px;
+  width: 75%;
+  font-size: 16pt;
+  border: 1px solid #c060a1;
+  border-radius: 5px;
+}
+
+/* Form content. */
+div#form-area {
+  margin: 25px auto;
+  padding: 15px;
+  width: 75%;
+  font-size: 16pt;
+  border: 1px solid #c060a1;
+  border-radius: 5px;
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+fieldset {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.error {
+  color: red;
+}
+
+input:focus {
+  background-color: #444;
+  color: white;
+}
+textarea:focus {
+  background-color: #444;
+  color: white;
+}
+
+input,
+textarea {
+  background-color: #1d1d1d;
+  color: #f1d4d4;
+}
+
+/* Footer content. */
+
+footer {
+  margin: 25px auto;
+  padding: 15px;
+  width: 100%;
+  font-size: 12pt;
+  border: 1px solid #444;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Add some nav links in the footer at some point. */
+footer nav ul {
+  display: flex;
+  padding: 0px;
+  margin: 0px;
+}
+
+footer nav ul li {
+  margin: auto 15px;
 }

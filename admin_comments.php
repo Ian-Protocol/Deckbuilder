@@ -46,8 +46,10 @@ if (isset($_POST['delete-comment'])) {
 <html lang="en">
     <?php include './includes/head.php'; ?>
     <body>
-        <h1>Commander Deckbuilder - Admin Control Panel</h1>
+        <header>
+        <h1>Admin Control Panel</h1>
         <?php include './includes/navbar.php'; ?>
+        </header>
         <?php if (!empty($error_message)): ?>
             <div id="message">
                 <?php foreach ($error_message as $message): ?>

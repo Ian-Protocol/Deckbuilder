@@ -41,9 +41,10 @@ if ($_POST) {
 <html lang="en">
     <?php include './includes/head.php'; ?>
     <body>
+        <header>
         <h1>Commander Deckbuilder - Log In</h1>
         <?php include './includes/navbar.php'; ?>
-
+        </header>
         <div id="register">
             <h2>Log in to start building and enjoy the community!</h2>
             <form action="login.php" method="post">

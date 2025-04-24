@@ -89,8 +89,10 @@ $decks = $statement -> fetchAll();
 <html lang="en">
     <?php include './includes/head.php'; ?>
     <body>
-        <h1>Commander Deckbuilder - Admin Control Panel</h1>
+        <header>
+        <h1>Admin Control Panel</h1>
         <?php include './includes/navbar.php'; ?>
+        </header>
         <?php if (!empty($error_message)): ?>
             <div id="message">
                 <?php foreach ($error_message as $message): ?>
@@ -139,16 +141,16 @@ $decks = $statement -> fetchAll();
                         <?= $deck['title'] ?>
                     </td>
                     <td>
-                        <?= htmlspecialchars($deck['archetype']) ?>
+                        <?= $deck['archetype'] ?>
                     </td>
                     <td>
-                        <?= htmlspecialchars($deck['updated_at']) ?>
+                        <?= $deck['updated_at'] ?>
                     </td>
                     <td>
-                        <?= htmlspecialchars($deck['created_at']) ?>
+                        <?= $deck['created_at'] ?>
                     </td>
                     <td>
-                        <?= htmlspecialchars($deck['username']) ?>
+                        <?= $deck['username'] ?>
                     </td>
                     <td>
                         <input type="submit" name="edit-deck" value="Edit">

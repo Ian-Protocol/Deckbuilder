@@ -213,8 +213,10 @@ if (isset($_POST['update'])) {
 <html lang="en">
     <?php include './includes/head.php'; ?>
     <body>
+        <header>
         <h1>Commander Deckbuilder - <?= $deck['title'] . " - by " . $deck_owner_username ?></h1>
         <?php include './includes/navbar.php'; ?>
+        </header>
         <?php if (!empty($error_message)): ?>
             <div id="message">
                 <?php foreach ($error_message as $message): ?>

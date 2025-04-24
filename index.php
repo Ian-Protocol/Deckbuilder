@@ -28,11 +28,13 @@ $decks = $statement -> fetchAll();
 <html lang="en">
     <?php include './includes/head.php'; ?>
     <body>
-        <h1>Commander Deckbuilder</h1>
-        <?php include './includes/navbar.php'; ?>
-        <div id="featured">
-            <h2>Recent Decks</h2>
+        <header>
+            <h1>Commander Deckbuilder</h1>
+            <?php include './includes/navbar.php'; ?>
+        </header>
+        <main>
             <table>
+                <caption><h2>Recent Decks</h2></caption>
                 <tr>
                     <th></th>
                     <th>Deck Name</th>
@@ -41,7 +43,7 @@ $decks = $statement -> fetchAll();
                     <th>Last Updated</th>
                 </tr>
                 <?php foreach ($decks as $deck): ?>
-                    <tr>
+                    <tr class="deck">
                         <td>
                             <?php if ($deck['thumbnail_path']): ?>
                                 <img src="<?= $deck['thumbnail_path'] ?>" alt="Deck Thumbnail" />
@@ -54,7 +56,7 @@ $decks = $statement -> fetchAll();
                     </tr>
                 <?php endforeach ?>
             </table>
-        </div>
+        </main>
     </body>
     <?php include './includes/footer.php'; ?>
 </html>
