@@ -41,6 +41,7 @@ $archetypes = $statement->fetchAll();
         <h1>Commander Deckbuilder - View Decks</h1>
         <?php include './includes/navbar.php'; ?>
         </header>
+        <div id="register">
         <h1>Browse by Archetype</h1>
         <form action="archetype.php" method="get">
             <select id="archetype" name="archetype">
@@ -50,10 +51,11 @@ $archetypes = $statement->fetchAll();
             </select>
             <input type="submit" value="Go">
         </form>
+        </div>
         <div id="featured">
-            <h2>All Decks</h2>
             <table>
-                <tr>
+                <caption><h2>All Decks</h2></caption>
+                <tr class="deck">
                     <th></th>
                     <th>Deck Name</th>
                     <th>Commander</th>

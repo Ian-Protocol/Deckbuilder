@@ -45,6 +45,7 @@ $archetypes = $statement->fetchAll();
     <h1>Commander Deckbuilder - View Decks</h1>
     <?php include './includes/navbar.php'; ?>
     </header>
+    <div id="register">
     <h1>Browse by Archetype</h1>
         <form action="archetype.php" method="get">
             <select id="archetype" name="archetype">
@@ -54,13 +55,14 @@ $archetypes = $statement->fetchAll();
             </select>
             <input type="submit" value="Go">
         </form>
-    <h1><?= ucwords($selected_archetype['archetype']) ?> Decks</h1>
-<?php if (count($decks) === 0): ?>
-    <p>No decks found for this archetype.</p>
-<?php else: ?>
+    </div>
+    <h2><?= ucwords($selected_archetype['archetype']) ?> Decks</h2>
+    <?php if (count($decks) === 0): ?>
+        <p><h3>No decks found for this archetype.</h3></p>
+    <?php else: ?>
     <div id="featured">
         <table>
-            <tr>
+            <tr class="deck">
                 <th></th>
                 <th>Deck Name</th>
                 <th>Commander</th>
@@ -69,7 +71,7 @@ $archetypes = $statement->fetchAll();
                 <th>Created By</th>
             </tr>
             <?php foreach ($decks as $deck): ?>
-                <tr>
+                <tr class="deck">
                     <td>
                         <?php if (!empty($deck['thumbnail_path'])): ?>
                             <img src="<?= $deck['thumbnail_path'] ?>" alt="Deck Thumbnail" />

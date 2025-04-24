@@ -79,10 +79,10 @@ if ($_POST) {
         <div id="register">
             <h2>Sign up to start building and enjoy the community!</h2>
             <form action="register.php" method="post">
-                <label for="username">Username:</label><input type="text" id="username" name="username" required />
-                <label for="email">Email:</label><input type="email" id="email" name="email" required />
-                <label for="password">Password:</label><input type="password" id="password" name="password" required />
-                <label for="password-reenter">Re-Enter Password:</label><input type="password" id="password-reenter" name="password-reenter" required />
+                <label for="username">Username:</label><input type="text" id="username" name="username" required /><br>
+                <label for="email">Email:</label><input type="email" id="email" name="email" required /><br>
+                <label for="password">Password:</label><input type="password" id="password" name="password" required /><br>
+                <label for="password-reenter">Re-Enter Password:</label><input type="password" id="password-reenter" name="password-reenter" required /><br>
                 <input type="submit" value="Register">
             </form>
         </div>

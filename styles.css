@@ -49,6 +49,18 @@ table {
   background-color: #1d1d1d;
 }
 
+.comment {
+  margin: 10px;
+  padding: 15px;
+  padding-bottom: 30px;
+  /* width: 250px; */
+  font-size: 16pt;
+  border: 1px solid #c060a1;
+  border-radius: 5px;
+  text-align: center;
+  background-color: #1d1d1d;
+}
+
 #register {
   margin: 10px;
   padding: 15px;
@@ -199,7 +211,7 @@ header {
 }
 
 body {
-  margin-top: 210px;
+  margin-top: 125px;
 }
 
 header h1 {

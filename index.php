@@ -35,7 +35,7 @@ $decks = $statement -> fetchAll();
         <main>
             <table>
                 <caption><h2>Recent Decks</h2></caption>
-                <tr>
+                <tr class="deck">
                     <th></th>
                     <th>Deck Name</th>
                     <th>Commander</th>

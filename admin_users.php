@@ -243,7 +243,7 @@ if (isset($_POST['delete-user'])) {
         <form action="admin_users.php" method="post">
             <fieldset>
                 <table>
-                    <tr>
+                    <tr class="deck">
                         <td><label for="username">Username:</label><input type="text" id="username" name="username" required /></td>
                         <td><label for="role">Role:</label>
                         <select name="role" id="role">
@@ -260,7 +260,7 @@ if (isset($_POST['delete-user'])) {
         </form>
         <h3>Edit Existing User</h3>
         <table>
-            <tr>
+            <tr class="deck">
                 <th>Username</th>
                 <th>Role</th>
                 <th>Email</th>
@@ -270,7 +270,7 @@ if (isset($_POST['delete-user'])) {
             </tr>
 
         <?php foreach ($users as $user): ?>
-            <tr>
+            <tr class="deck">
                 <form action="admin_users.php" method="post">
                     <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
                     <td>

@@ -214,7 +214,7 @@ if (isset($_POST['update'])) {
     <?php include './includes/head.php'; ?>
     <body>
         <header>
-        <h1>Commander Deckbuilder - <?= $deck['title'] . " - by " . $deck_owner_username ?></h1>
+        <h1>Commander Deckbuilder - Edit Deck</h1>
         <?php include './includes/navbar.php'; ?>
         </header>
         <?php if (!empty($error_message)): ?>
@@ -224,47 +224,55 @@ if (isset($_POST['update'])) {
                 <?php endforeach ?>
             </div>
         <?php endif ?>
+        <div id="register">
+        <h1><?= $deck['title'] . " - by " . $deck_owner_username ?></h1>
         <form action="edit_deck.php?id=<?= $id ?>" method="post" enctype="multipart/form-data">
             <div id="deck-heading">
-                <label for="title">Title:</label>
-                <input type="text" name="title" id="title" value="<?= $deck['title'] ?>">
-                <label for="archetype">Archetype:</label>
-                <select name="archetype" id="archetype">
-                    <?php foreach ($archetypes as $archetype): ?>
-                        <option value="<?= $archetype['archetype_id'] ?>" <?= $archetype['archetype_id'] == $deck_archetype_id ? 'selected' : '' ?>>
-                            <?= ucwords($archetype['archetype']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <?php if ($deck['regular_path'] != ""): ?>
-                    <img src="<?= $deck['regular_path'] ?>" alt="Deck Image" />
-                    <label for="delete-image">Delete Image</label>
-                    <input name="delete-image" id="delete-image" type="checkbox">
-                    <label for="image">Update Image</label>
-                <?php else: ?>
-                    <label for="image">Add Image</label>
-                <?php endif ?>
-                <input type="file" name="image" id="image">
-                <h3>Description</h3>
-                <label for="description">Description:</label>
-                <textarea name="description" id="description"><?= $deck['description'] ?></textarea>
+                <p>
+                    <label for="title">Title:</label>
+                    <input type="text" name="title" id="title" value="<?= $deck['title'] ?>">
+                </p>
+                <p>
+                    <label for="archetype">Archetype:</label>
+                    <select name="archetype" id="archetype">
+                        <?php foreach ($archetypes as $archetype): ?>
+                            <option value="<?= $archetype['archetype_id'] ?>" <?= $archetype['archetype_id'] == $deck_archetype_id ? 'selected' : '' ?>>
+                                <?= ucwords($archetype['archetype']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </p>
+                <p>
+                    <?php if ($deck['regular_path'] != ""): ?> 
+                        <img src="<?= $deck['regular_path'] ?>" alt="Deck Image" /><br>
+                        <label for="delete-image">Delete Image</label>
+                        <input name="delete-image" id="delete-image" type="checkbox"><br>
+                        <label for="image">Update Image</label>
+                    <?php else: ?>
+                        <label for="image">Add Image</label>
+                    <?php endif ?>
+                    <input type="file" name="image" id="image">
+                </p>
+                <p>
+                    <label for="description">Description:</label>
+                    <textarea name="description" id="description"><?= $deck['description'] ?></textarea>
+                </p>
             </div>
-            <div id="deck">
+            </div>
                 <table>
-                    <tr>
+                    <tr class="deck">
                         <th>Qty</th>
                         <th>Card Name</th>
                         <th>Mana Cost</th>
                     </tr>
                     <?php foreach ($cards as $card): ?>
-                        <tr>
+                        <tr class="deck">
                             <td><input type="number" name="card_quantities[<?= $card['card_id'] ?>]" id="card_quantity_<?= $card['card_id'] ?>" min="0" value="<?= $card['quantity'] ?>"></td>
                             <td><?= $card['card_name'] ?></td>
                             <td><?= $card['mana_cost'] ?></td>
                         </tr>
                     <?php endforeach ?>
                 </table>
-            </div>
             <input type="submit" name="update" value="Update Deck">
             <input type="submit" name="delete" value="Delete Deck">
         </form>

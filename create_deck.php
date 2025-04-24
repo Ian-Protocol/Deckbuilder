@@ -292,6 +292,7 @@ if ($_POST) {
                 <?php endforeach ?>
             </div>
         <?php endif ?>
+        <div id="register">
         <form action="create_deck.php" method="post" enctype="multipart/form-data">
             <fieldset>
                 <legend>New Deck</legend>
@@ -332,6 +333,7 @@ if ($_POST) {
                 </p>
             </fieldset>
         </form>
+        </div>
     </body>
     <?php include './includes/footer.php'; ?>
 </html>

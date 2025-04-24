@@ -119,7 +119,7 @@ $decks = $statement -> fetchAll();
             <input type="submit" name="sort" value="Sort Decks">
         </form>
         <table>
-            <tr>
+            <tr class="deck">
                 <th></th>
                 <th>Deck Name</th>
                 <th>Archetype</th>
@@ -129,7 +129,7 @@ $decks = $statement -> fetchAll();
                 <th colspan="2">Actions</th>
             </tr>
         <?php foreach ($decks as $deck): ?>
-            <tr>
+            <tr class="deck">
                 <form action="admin_decks.php" method="post">
                     <input type="hidden" name="deck-id" value="<?= $deck['deck_id'] ?>">
                     <td>

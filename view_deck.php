@@ -116,28 +116,31 @@ if ($_POST) {
 <html lang="en">
     <?php include './includes/head.php'; ?>
     <body>
-        <h1>Commander Deckbuilder - <?= $deck['title'] . " - by " . $deck_owner_username ?></h1>
+        <header>
+        <h1>Commander Deckbuilder - View Deck</h1>
         <?php include './includes/navbar.php'; ?>
-        <div id="deck-heading">
-            <h2><?= $deck['name'] ?></h2>
-            <?php if ($can_edit): ?>
-                <a href="edit_deck.php?id=<?= $deck['deck_id'] ?>">Edit Deck</a>
-            <?php endif ?>
+        </header>
+        <div id="register">
+            <h1><?= $deck['title'] . " - by " . $deck_owner_username ?></h1>
+            <h2>Commander: <?= $deck['name'] ?></h2>
             <?php if ($deck['regular_path'] != ""): ?>
                 <img src="<?= $deck['regular_path'] ?>" alt="Deck Image" />
             <?php endif ?>
             <h3>Description</h3>
             <?= $deck['description'] ?>
+            <?php if ($can_edit): ?>
+                <h2><a href="edit_deck.php?id=<?= $deck['deck_id'] ?>">Edit Deck</a></h2>
+            <?php endif ?>
         </div>
         <div id="deck">
             <table>
-                <tr>
+                <tr class="deck">
                     <th>Qty</th>
                     <th>Card Name</th>
                     <th>Mana Cost</th>
                 </tr>
                 <?php foreach ($cards as $card): ?>
-                    <tr>
+                    <tr class="deck">
                         <td><?= $card['quantity'] ?></td>
                         <td><?= $card['card_name'] ?></td>
                         <td><?= $card['mana_cost'] ?></td>

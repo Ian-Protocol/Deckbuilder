@@ -66,14 +66,14 @@ if (isset($_POST['delete-comment'])) {
         <?php endif ?>
         <h2>Comment Control</h2>
         <table>
-            <tr>
+            <tr class="deck">
                 <th>Username</th>
                 <th>Content</th>
                 <th>Date Posted</th>
                 <th>Actions</th>
             </tr>
         <?php foreach ($comments as $comment): ?>
-            <tr>
+            <tr class="deck">
                 <form action="admin_comments.php" method="post">
                     <input type="hidden" name="comment-id" value="<?= $comment['comment_id'] ?>">
                     <td>

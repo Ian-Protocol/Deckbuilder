@@ -139,7 +139,7 @@ if (isset($_POST['delete-archetype'])) {
         <form action="admin_archetypes.php" method="post">
             <fieldset>
                 <table>
-                    <tr>
+                    <tr class="deck">
                         <td><label for="archetype">Archetype:</label><input type="text" id="archetype" name="archetype" required /></td>
                         <td><input type="submit" name="create-archetype" value="Create Archetype"></td>
                     </tr>
@@ -148,13 +148,13 @@ if (isset($_POST['delete-archetype'])) {
         </form>
         <h3>Edit Existing Archetype</h3>
         <table>
-            <tr>
+            <tr class="deck">
                 <th>Archetype</th>
                 <th colspan="2">Actions</th>
             </tr>
 
         <?php foreach ($archetypes as $archetype): ?>
-            <tr>
+            <tr class="deck">
                 <form action="admin_archetypes.php" method="post">
                     <input type="hidden" name="archetype-id" value="<?= $archetype['archetype_id'] ?>">
                     <td>
