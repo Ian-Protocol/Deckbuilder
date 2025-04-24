@@ -27,7 +27,7 @@ $statement -> execute();
 $decks = $statement -> fetchAll();
 
 // Fetch archetypes
-$query = "SELECT * FROM archetypes ORDER BY archetype";
+$query = "SELECT * FROM archetypes ORDER BY archetype ASC";
 $statement = $db->prepare($query);
 $statement->execute();
 $archetypes = $statement->fetchAll();

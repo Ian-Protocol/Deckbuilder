@@ -256,22 +256,24 @@ if ($_POST) {
         $error_message[] = "Decklist cannot be empty";
     }
 
-    // Find commander id.
-    $commander_id = find_card($db, $commander_name);
+    if (empty($error_message)) {
+        // Find commander id.
+        $commander_id = find_card($db, $commander_name);
 
-    // Parse decklist
-    $decklist = parse_decklist($decklist_raw);
+        // Parse decklist
+        $decklist = parse_decklist($decklist_raw);
 
-    // Save deck to decks table.
-    $deck_id = save_deck($db, $title, $description, $commander_id, $archetype, $user_id);
+        // Save deck to decks table.
+        $deck_id = save_deck($db, $title, $description, $commander_id, $archetype, $user_id);
 
-    // Upload image to uploads folder and images table.
-    if ($image_upload_detected && !$upload_error_detected) {
-        upload_image($db, $deck_id);
+        // Upload image to uploads folder and images table.
+        if ($image_upload_detected && !$upload_error_detected) {
+            upload_image($db, $deck_id);
+        }
+
+        // Save deck list to deck_cards table.
+        save_deck_cards($db, $deck_id, $decklist);
     }
-
-    // Save deck list to deck_cards table.
-    save_deck_cards($db, $deck_id, $decklist);
 }
 ?>
 
@@ -321,7 +323,7 @@ if ($_POST) {
                 </P>
                 <p>
                     <label for="decklist">Deck List:</label>
-                    <textarea name="decklist" id="decklist">Paste deck list here.</textarea>
+                    <textarea name="decklist" id="decklist" placeholder="Paste deck list here."></textarea>
                 </p>
                 <p>
                     <input type="submit" value="Submit">
