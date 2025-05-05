@@ -16,6 +16,7 @@ require './includes/images.php';
 
 $page_title = "Commander Deckbuilder - Create Deck";
 $error_message = [];
+$captcha_msg = '';
 
 // Fetch archetypes
 $query = "SELECT * FROM archetypes ORDER BY archetype ASC";
@@ -318,8 +319,8 @@ if ($_POST) {
                     <select name="archetype_id" id="archetype" required>
                         <option value="">-- Select Archetype --</option>
                         <?php foreach ($archetypes as $archetype): ?>
-                            <option value="<?= htmlspecialchars($archetype['archetype_id']) ?>">
-                                <?= htmlspecialchars(ucwords($archetype['archetype'])) ?>
+                            <option value="<?= $archetype['archetype_id'] ?>">
+                                <?= ucwords($archetype['archetype']) ?>
                             </option>
                         <?php endforeach; ?>
                     </select> 
